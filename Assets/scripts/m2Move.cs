@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//adding a comment to test the GitHub sync thing
 public class m2Move : MonoBehaviour {
 	private float moveSpeed = 10f;
 	private float turnSpeed = 100f;
