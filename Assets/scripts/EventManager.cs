@@ -25,11 +25,16 @@ public class EventManager : MonoBehaviour {
 	protected Text textMe;
 	protected GameObject textBoxMe;
 
+	protected GameObject mainCanvas;
+	protected GameObject invBox;
+
 	void Awake () {
 		m2 = GameObject.Find("m2");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
 		addInventoryItems ();
+		mainCanvas = GameObject.Find ("Canvas");
+		invBox = GameObject.Find ("inventory");
 
 		// to get all text children of a canvas
 		//GameObject canvas = GameObject.Find("Canvas");

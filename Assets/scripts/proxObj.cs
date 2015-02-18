@@ -12,6 +12,16 @@ public class proxObj : EventManager {
 	private Dictionary<string, string> objects = new Dictionary<string, string>();
 	private string temp = null;
 	private Text txt;
+	private Image[] images;
+	private GameObject thisObject;
+
+	public Sprite spriteNorm;
+	public Sprite spriteHigh;
+	public string itemName;
+	public string itemDescription;
+	public string useWith;
+	
+	public int maxSize; // The max amount of times the item can stack
 
 	protected override void Start () {
 		// protected or public to use override (child), call base.Start() to cascade them
@@ -38,18 +48,40 @@ public class proxObj : EventManager {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		Physics.Raycast(ray, out hit);
+		thisObject = hit.transform.gameObject;
 
 		if (Input.GetMouseButton (0)) {
 			// left button clicked;
-			if (base.stationary && (hit.transform.gameObject.tag == "obj" || hit.transform.gameObject.tag == "obj_pickup" || hit.transform.gameObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
+			if (base.stationary && (thisObject.tag == "obj" || thisObject.tag == "obj_pickup" || thisObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
 				// get vector3 but only use x - z position
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
 				base.stationary = false;
 			}
 
-			if(hit.transform.gameObject.tag == "obj_pickup"){
-				base.inventory.Add(new inventory(hit.transform.gameObject.name));
-				Destroy (hit.transform.gameObject);
+			if(thisObject.tag == "obj_pickup"){
+				base.inventory.Add(new inventory(thisObject.name));
+
+				/********************************************************
+				 ***												  ***
+				 ***				Question section				  ***
+				 ***												  ***
+				 ********************************************************/
+				// What is supposed to happen here is the script will choose the next available "slot" in the inventory
+				// read in the information (variables) from the picked up object and set those variables to the selected
+				// slot. The problem is I can't find reference to access the script variables for the "slot" UI object
+				// nor the hit object (thisObject) script variables
+
+				//Debug.Log(thisObject.GetComponent<itemDescription>);
+
+				images = base.invBox.GetComponentsInChildren<Image>();
+				foreach (Image image in images) { // Loop through each image inside the inventory "box"
+					Debug.Log(image.sprite);
+				}
+				
+				//base.displayMessage (hit.transform.gameObject.TryGetValue(itemName), 4);
+
+				// once slot has been set remove the selected object from game
+				Destroy (thisObject);
 
 				textMe.text = "";
 				foreach(inventory thisOne in base.inventory) {
