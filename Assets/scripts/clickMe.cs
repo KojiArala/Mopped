@@ -3,11 +3,11 @@ using System.Collections;
 
 public class clickMe : EventManager {
 	void OnEnable() {
-		EventManager.OnClicked += displayMessage;
+		//EventManager.OnClicked += displayMessage;
 	}
 	
 	void OnDisable() {
-		EventManager.OnClicked -= displayMessage;
+		//EventManager.OnClicked -= displayMessage;
 	}
 	
 	void displayMessage() {

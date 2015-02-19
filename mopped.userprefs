@@ -2,10 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\proxObj.cs">
     <Files>
-      <File FileName="Assets\scripts\EventManager.cs" Line="38" Column="3" />
-      <File FileName="Assets\scripts\proxObj.cs" Line="68" Column="63" />
-      <File FileName="Assets\scripts\toggleInventory.cs" Line="7" Column="1" />
-      <File FileName="Assets\scripts\slot.cs" Line="5" Column="27" />
+      <File FileName="Assets\scripts\proxObj.cs" Line="115" Column="7" />
+      <File FileName="Assets\scripts\EventManager.cs" Line="150" Column="1" />
+      <File FileName="Assets\scripts\toggleInventory.cs" Line="13" Column="4" />
+      <File FileName="Assets\scripts\slot.cs" Line="20" Column="1" />
+      <File FileName="Assets\scripts\keypadNumberClick.cs" Line="7" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

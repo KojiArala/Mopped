@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class EventManager : MonoBehaviour {
 	public delegate void ClickAction();
-	public static event ClickAction OnClicked;
+	//public static event ClickAction OnClicked;
 	protected string thisString = "";
 	private GUIStyle myStyle = new GUIStyle();
 	private RectOffset rctOff;
@@ -25,16 +25,22 @@ public class EventManager : MonoBehaviour {
 	protected Text textMe;
 	protected GameObject textBoxMe;
 
-	protected GameObject mainCanvas;
+	// UI elements
 	protected GameObject invBox;
+
+	// keypad code setup
+	public static int thisCode;
+	public static string tappedCode;
+	public static string numberTemp;
+	public static bool keypadClosed = true;
+
 
 	void Awake () {
 		m2 = GameObject.Find("m2");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
 		addInventoryItems ();
-		mainCanvas = GameObject.Find ("Canvas");
-		invBox = GameObject.Find ("inventory");
+		getUIElements ();
 
 		// to get all text children of a canvas
 		//GameObject canvas = GameObject.Find("Canvas");
@@ -45,6 +51,11 @@ public class EventManager : MonoBehaviour {
 		// to get specific text object by name
 		textMe = textBoxMe.GetComponent<Text>();
 		textMe.text = "";
+
+		thisCode = -10;
+		tappedCode = "-42";
+		numberTemp = "";
+
 	}
 	
 	protected virtual void Start() {
@@ -132,6 +143,11 @@ public class EventManager : MonoBehaviour {
 		inventoryOverlay.Add ("notebook", "Notebook, ode to pulp");
 		inventoryOverlay.Add ("bottle", "Bottle, not just for babies anymore");
 		//room 2 objects
+
+	}
+
+	void getUIElements(){
+		invBox = GameObject.Find ("inventory");
 
 	}
 

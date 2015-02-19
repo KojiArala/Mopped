@@ -10,11 +10,18 @@ public class proxObj : EventManager {
 	private float delta;
 	private Vector3 thisPos;
 	private Dictionary<string, string> objects = new Dictionary<string, string>();
+	private Dictionary<string, int> keypadCodes = new Dictionary<string, int>();
+	private Dictionary<string, string> keypads = new Dictionary<string, string>();
+	private Dictionary<string, string> doors = new Dictionary<string, string>();
 	private string temp = null;
+	private string nameTemp = null;
+	private int tempCode;
+	private string currentDoor;
 	private Text txt;
 	private Image[] images;
 	private GameObject thisObject;
-
+	private GameObject tempObject;
+	
 	public Sprite spriteNorm;
 	public Sprite spriteHigh;
 	public string itemName;
@@ -28,6 +35,8 @@ public class proxObj : EventManager {
 		base.Start ();
 		thisPos = this.transform.position;
 		addGameObjects();
+		thisCode = -100;
+		currentDoor = null;
 	}
 	
 	// Update is called once per frame
@@ -45,15 +54,65 @@ public class proxObj : EventManager {
 			//Debug.Log ("M2 is within range of " + this.name);
 		}
 
+		//check keypad code entry if keypad code is loaded
+		if (thisCode > 0) {
+			Debug.Log ("Checking code " + thisCode);
+
+			if(thisCode == int.Parse(tappedCode)) {
+				base.displayMessage ("Unlocking door 1", 1);
+				GameObject singleDoor;
+				singleDoor = GameObject.Find(currentDoor);
+				singleDoor.GetComponent<proxDoor>().unlockDoor();
+
+				tempObject.transform.position = new Vector2 (-300, tempObject.transform.position.y);
+				keypadClosed = true;
+				thisCode = -100;
+				tappedCode = "-42";
+				currentDoor = null;
+				Debug.Log("OPENED");
+			}
+		}
+
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		Physics.Raycast(ray, out hit);
-		thisObject = hit.transform.gameObject;
+		if(hit.transform.gameObject != null) thisObject = hit.transform.gameObject;
 
 		if (Input.GetMouseButton (0)) {
 			// left button clicked;
-			if (base.stationary && (thisObject.tag == "obj" || thisObject.tag == "obj_pickup" || thisObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
-				// get vector3 but only use x - z position
+			if (base.stationary && (thisObject.tag == "obj" || thisObject.tag == "obj_pickup" || thisObject.tag == "keypad" || thisObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
+				if(thisObject.tag == "keypad" && keypadClosed){
+					//Debug.Log (thisObject.name);
+					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
+						tempObject = GameObject.Find (nameTemp);
+						tempObject.transform.position = new Vector2 (500, tempObject.transform.position.y);
+						keypadClosed = false;
+						if(keypadCodes.TryGetValue(thisObject.name, out tempCode)){
+							thisCode = tempCode;
+						}
+						else {
+							Debug.Log ("ERROR: proxObj line 70 keypad code does not exist in dictionary");
+							thisCode = -100;
+						}
+						//currentDoor
+						if(doors.TryGetValue(thisObject.name, out nameTemp)){
+							currentDoor = nameTemp;
+						}
+						else {
+							Debug.Log ("ERROR: proxObj line 70 keypad code does not exist in dictionary");
+							thisCode = -100;
+						}
+
+					}
+					else {
+						Debug.Log ("ERROR: proxObj line 67 keypad does not exist in dictionary");
+						nameTemp = "ERROR (" + thisObject.name + ")";
+					}
+				}
+				//Debug.Log("Using this code " + thisCode + " for keypad " + nameTemp);
+
+				//move M2 to clicked position
+				//get vector3 but only use x - z position
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
 				base.stationary = false;
 			}
@@ -94,21 +153,15 @@ public class proxObj : EventManager {
 				}
 			}
 
-			if(hit.transform.gameObject.name == "door_keypad_room1") {
-				base.displayMessage ("Unlocking door 1", 1);
-				GameObject singleDoor;
-				singleDoor = GameObject.Find("door_room1");
-				singleDoor.GetComponent<proxDoor>().unlockDoor();
-			}
 		}
 		if (Input.GetMouseButton (1)) {
 			// right button clicked;
-			if(objects.TryGetValue(hit.transform.gameObject.name, out temp)){
+			if(objects.TryGetValue(thisObject.name, out temp)){
 				base.displayMessage (temp, 4);
 			}
 			else {
 				base.displayMessage ("", 1);
-				Debug.Log (hit.transform.gameObject.name + " not in Dictionary");
+				Debug.Log (thisObject.name + " not in Dictionary");
 			}
 		}
 		if (Input.GetMouseButton (2)) {
@@ -123,6 +176,23 @@ public class proxObj : EventManager {
 	}
 
 	void addGameObjects (){
+		//keypads
+		//	name of keypad object in room
+		//	name of keypad panel to move into place
+		keypads.Add ("door_keypad_room1", "room1_keypad");
+
+		//keypad codes
+		//	name of keypad object in room
+		//	code to use for the selected keypad
+		keypadCodes.Add ("door_keypad_room1", 9432);
+
+
+		//keypad codes
+		//	name of keypad object in room
+		//	code to use for the selected keypad
+		doors.Add ("door_keypad_room1", "door_room1");
+		
+		
 		//room 1 objects
 		objects.Add ("bucket", "Bucket, contains Class 1 cleaning solution.\nAlly in war on floor based contaminants.\n\n");
 		objects.Add ("pencil", "Pencil. Non-permanent writing implement.\nFrequent source of floor debris.\n\n");
