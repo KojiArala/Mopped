@@ -19,6 +19,7 @@ public class proxObj : EventManager {
 	private string currentDoor;
 	private Text txt;
 	private Image[] images;
+	private Button[] buttons;
 	private GameObject thisObject;
 	private GameObject tempObject;
 	
@@ -118,39 +119,54 @@ public class proxObj : EventManager {
 			}
 
 			if(thisObject.tag == "obj_pickup"){
-				base.inventory.Add(new inventory(thisObject.name));
+				/****************************************************************
+				 ***														  ***
+				 ***				Swap out inventory button				  ***
+				 ***														  ***
+				 ****************************************************************/
 
-				/********************************************************
-				 ***												  ***
-				 ***				Question section				  ***
-				 ***												  ***
-				 ********************************************************/
-				// What is supposed to happen here is the script will choose the next available "slot" in the inventory
-				// read in the information (variables) from the picked up object and set those variables to the selected
-				// slot. The problem is I can't find reference to access the script variables for the "slot" UI object
-				// nor the hit object (thisObject) script variables
+				// remove once the inventory sprites are working correctly
+//				base.inventory.Add(new inventory(thisObject.name));
 
-				//Debug.Log(thisObject.GetComponent<itemDescription>);
-
-				images = base.invBox.GetComponentsInChildren<Image>();
-				foreach (Image image in images) { // Loop through each image inside the inventory "box"
-					Debug.Log(image.sprite);
-				}
-				
-				//base.displayMessage (hit.transform.gameObject.TryGetValue(itemName), 4);
-
-				// once slot has been set remove the selected object from game
-				Destroy (thisObject);
-
-				textMe.text = "";
-				foreach(inventory thisOne in base.inventory) {
-					if(base.inventoryOverlay.TryGetValue(thisOne.name, out temp)){
-						// prints out all objects in inventoryOverlay that match items in inventory List
-						//   in order you picked them up
-						textMe.text += temp + "\n";
+				bool slotFound = false;
+				buttons = base.invBox.GetComponentsInChildren<Button>();
+				//for (int i = 0; i < buttons.Length; i++) { //for loop isn't working either...break still doesn't Break...
+				//	Button thisOne = buttons[i];
+				foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
+					if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
+						Debug.Log("got an empty slot " + thisOne.GetComponent<slot>().slotEmpty);
+						thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
+						thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
+						thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
+						thisOne.GetComponent<Image>().sprite = thisObject.GetComponent<proxObj>().spriteNorm;
+						thisOne.GetComponent<slot>().slotEmpty = false;
+						SpriteState st = new SpriteState();
+						st.highlightedSprite = thisObject.GetComponent<proxObj>().spriteNorm;
+						st.pressedSprite = thisObject.GetComponent<proxObj>().spriteHigh;
+						thisOne.spriteState = st;
+						slotFound = true;
+						Debug.Log("got an empty slot2 " + thisOne.GetComponent<slot>().slotEmpty);
+						// once slot has been set remove the selected object from game
+						Destroy (thisObject);
+						base.displayMessage (thisOne.GetComponent<slot>().itemName + " added to inventory", 1);
+						break; // break statement appears to not work at all, it sets every button anyhoo
 					}
-
 				}
+				if(!slotFound) {
+					// all slots are full, no more room in inventory
+					Debug.Log("Inventory full, please clear something out before trying to add something new.");
+				}
+
+				// remove once the inventory sprites are working correctly
+//				textMe.text = "";
+//				foreach(inventory thisOne in base.inventory) {
+//					if(base.inventoryOverlay.TryGetValue(thisOne.name, out temp)){
+//						// prints out all objects in inventoryOverlay that match items in inventory List
+//						//   in order you picked them up
+//						textMe.text += temp + "\n";
+//					}
+//
+//				}
 			}
 
 		}
@@ -174,7 +190,7 @@ public class proxObj : EventManager {
 		// only for left click
 		//Debug.Log ("you clicked me " + this.name);
 	}
-
+	
 	void addGameObjects (){
 		//keypads
 		//	name of keypad object in room

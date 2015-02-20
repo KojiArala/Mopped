@@ -21,4 +21,8 @@ public class slot : EventManager {
 	public void Use() {
 		// stuff goes here
 	}
+
+	public void displayInfo() {
+
+	}
 }
