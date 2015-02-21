@@ -80,6 +80,7 @@ public class proxObj : EventManager {
 		if(hit.transform.gameObject != null) thisObject = hit.transform.gameObject;
 
 		if (Input.GetMouseButton (0)) {
+			//Debug.Log("Clicked on a GameObject (on GUI) " + EventSystem.current.IsPointerOverGameObject());
 			// left button clicked;
 			if (base.stationary && (thisObject.tag == "obj" || thisObject.tag == "obj_pickup" || thisObject.tag == "keypad" || thisObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
 				if(thisObject.tag == "keypad" && keypadClosed){
@@ -119,54 +120,7 @@ public class proxObj : EventManager {
 			}
 
 			if(thisObject.tag == "obj_pickup"){
-				/****************************************************************
-				 ***														  ***
-				 ***				Swap out inventory button				  ***
-				 ***														  ***
-				 ****************************************************************/
-
-				// remove once the inventory sprites are working correctly
-//				base.inventory.Add(new inventory(thisObject.name));
-
-				bool slotFound = false;
-				buttons = base.invBox.GetComponentsInChildren<Button>();
-				//for (int i = 0; i < buttons.Length; i++) { //for loop isn't working either...break still doesn't Break...
-				//	Button thisOne = buttons[i];
-				foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
-					if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
-						Debug.Log("got an empty slot " + thisOne.GetComponent<slot>().slotEmpty);
-						thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
-						thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
-						thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
-						thisOne.GetComponent<Image>().sprite = thisObject.GetComponent<proxObj>().spriteNorm;
-						thisOne.GetComponent<slot>().slotEmpty = false;
-						SpriteState st = new SpriteState();
-						st.highlightedSprite = thisObject.GetComponent<proxObj>().spriteNorm;
-						st.pressedSprite = thisObject.GetComponent<proxObj>().spriteHigh;
-						thisOne.spriteState = st;
-						slotFound = true;
-						Debug.Log("got an empty slot2 " + thisOne.GetComponent<slot>().slotEmpty);
-						// once slot has been set remove the selected object from game
-						Destroy (thisObject);
-						base.displayMessage (thisOne.GetComponent<slot>().itemName + " added to inventory", 1);
-						break; // break statement appears to not work at all, it sets every button anyhoo
-					}
-				}
-				if(!slotFound) {
-					// all slots are full, no more room in inventory
-					Debug.Log("Inventory full, please clear something out before trying to add something new.");
-				}
-
-				// remove once the inventory sprites are working correctly
-//				textMe.text = "";
-//				foreach(inventory thisOne in base.inventory) {
-//					if(base.inventoryOverlay.TryGetValue(thisOne.name, out temp)){
-//						// prints out all objects in inventoryOverlay that match items in inventory List
-//						//   in order you picked them up
-//						textMe.text += temp + "\n";
-//					}
-//
-//				}
+				//addToInventory();
 			}
 
 		}
@@ -188,7 +142,8 @@ public class proxObj : EventManager {
 
 	void OnMouseDown () {
 		// only for left click
-		//Debug.Log ("you clicked me " + this.name);
+		Debug.Log ("you clicked me " + this.name);
+		addToInventory();
 	}
 	
 	void addGameObjects (){
@@ -218,5 +173,35 @@ public class proxObj : EventManager {
 		objects.Add ("door_keypad_room1", "Hey look...a keypad\non the wall\n\n");
 		//room 2 objects
 
+	}
+
+	void addToInventory(){
+		bool slotFound = false;
+		buttons = base.invBox.GetComponentsInChildren<Button>();
+		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
+			if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
+				thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
+				thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
+				thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
+				thisOne.GetComponent<slot>().slotEmpty = false;
+
+				thisOne.GetComponent<Image>().sprite = thisObject.GetComponent<proxObj>().spriteNorm;
+				SpriteState st = new SpriteState();
+				st.highlightedSprite = thisObject.GetComponent<proxObj>().spriteHigh;
+				st.pressedSprite = thisObject.GetComponent<proxObj>().spriteNorm;
+				thisOne.spriteState = st;
+				slotFound = true;
+
+				// once slot has been set remove the selected object from game
+				Destroy (thisObject);
+				base.displayMessage (thisOne.GetComponent<slot>().itemName + " added to inventory", 1);
+				break; // break statement appears to not work at all, it sets every button anyhoo
+			}
+		}
+		if(!slotFound) {
+			// all slots are full, no more room in inventory
+			Debug.Log("Inventory full, please clear something out before trying to add something new.");
+		}
+		
 	}
 }

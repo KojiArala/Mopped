@@ -22,8 +22,6 @@ public class EventManager : MonoBehaviour {
 	protected List<inventory> inventory = new List<inventory>();
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
-	protected Text textMe;
-	protected GameObject textBoxMe;
 
 	// UI elements
 	protected GameObject invBox;
@@ -47,11 +45,6 @@ public class EventManager : MonoBehaviour {
 		//Text[] textValue = canvas.GetComponentsInChildren<Text>();
 		//textValue[0].text = "hey";
 		
-		textBoxMe = GameObject.Find ("inventory_text");
-		// to get specific text object by name
-		textMe = textBoxMe.GetComponent<Text>();
-		textMe.text = "";
-
 		thisCode = -10;
 		tappedCode = "-42";
 		numberTemp = "";

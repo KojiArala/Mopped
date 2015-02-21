@@ -17,6 +17,10 @@ public class slot : EventManager {
 		slotEmpty = true;
 	}
 
+	protected override void Update () {
+
+	}
+
 	// Uses the item
 	public void Use() {
 		// stuff goes here
