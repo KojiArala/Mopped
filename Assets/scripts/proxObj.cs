@@ -55,25 +55,6 @@ public class proxObj : EventManager {
 			//Debug.Log ("M2 is within range of " + this.name);
 		}
 
-		//check keypad code entry if keypad code is loaded
-		if (thisCode > 0) {
-			Debug.Log ("Checking code " + thisCode);
-
-			if(thisCode == int.Parse(tappedCode)) {
-				base.displayMessage ("Unlocking door 1", 1);
-				GameObject singleDoor;
-				singleDoor = GameObject.Find(currentDoor);
-				singleDoor.GetComponent<proxDoor>().unlockDoor();
-
-				tempObject.transform.position = new Vector2 (-300, tempObject.transform.position.y);
-				keypadClosed = true;
-				thisCode = -100;
-				tappedCode = "-42";
-				currentDoor = null;
-				Debug.Log("OPENED");
-			}
-		}
-
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		Physics.Raycast(ray, out hit);
@@ -118,12 +99,8 @@ public class proxObj : EventManager {
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
 				base.stationary = false;
 			}
-
-			if(thisObject.tag == "obj_pickup"){
-				//addToInventory();
-			}
-
 		}
+
 		if (Input.GetMouseButton (1)) {
 			// right button clicked;
 			if(objects.TryGetValue(thisObject.name, out temp)){
@@ -134,16 +111,37 @@ public class proxObj : EventManager {
 				Debug.Log (thisObject.name + " not in Dictionary");
 			}
 		}
+
 		if (Input.GetMouseButton (2)) {
 			// middle button clicked;
 		}
 
+		//check keypad code entry if keypad code is loaded
+		if (thisCode > 0) {
+			Debug.Log ("Checking code " + thisCode);
+			
+			if(thisCode == int.Parse(tappedCode)) {
+				base.displayMessage ("Unlocking door 1", 1);
+				GameObject singleDoor;
+				singleDoor = GameObject.Find(currentDoor);
+				singleDoor.GetComponent<proxDoor>().unlockDoor();
+				
+				tempObject.transform.position = new Vector2 (-300, tempObject.transform.position.y);
+				keypadClosed = true;
+				thisCode = -100;
+				tappedCode = "-42";
+				currentDoor = null;
+				Debug.Log("OPENED");
+			}
+		}
+		
 	}
 
 	void OnMouseDown () {
 		// only for left click
-		Debug.Log ("you clicked me " + this.name);
-		addToInventory();
+		if(this.tag == "obj_pickup") {
+			addToInventory();
+		}
 	}
 	
 	void addGameObjects (){
