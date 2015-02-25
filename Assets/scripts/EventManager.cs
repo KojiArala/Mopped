@@ -7,12 +7,6 @@ using UnityEngine.EventSystems;
 public class EventManager : MonoBehaviour {
 	public delegate void ClickAction();
 	//public static event ClickAction OnClicked;
-	protected string thisString = "";
-	private GUIStyle myStyle = new GUIStyle();
-	private RectOffset rctOff;
-	private int textWidth = Screen.width - 50;
-	private int textHeight = 10;
-	protected int textBoxTop = 30;
 	protected GameObject m2;
 	protected Vector3 m2Pos;
 	protected bool stationary = false;
@@ -22,19 +16,23 @@ public class EventManager : MonoBehaviour {
 	protected List<inventory> inventory = new List<inventory>();
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
+	protected int offset = 1000;
 
 	// UI elements
 	protected GameObject invBox;
+	protected GameObject invTab;
 
 	// keypad code setup
 	public static int thisCode;
 	public static string tappedCode;
 	public static string numberTemp;
 	public static bool keypadClosed = true;
+	public GameObject messageBox;
 
 
 	void Awake () {
 		m2 = GameObject.Find("m2");
+		messageBox = GameObject.Find("message");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
 		addInventoryItems ();
@@ -78,56 +76,50 @@ public class EventManager : MonoBehaviour {
 		return m2Pos;
 	}
 	
-	protected void displayMessage(string displayString, int lineCount) {
-		thisString = displayString;
-		textBoxTop = 10 * lineCount;
-		
-		CancelInvoke();
+	protected void displayMessage(string displayString) {
+		Text thisString = messageBox.GetComponent<Text>();
+		thisString.text = displayString;
+
+		//CancelInvoke();
 		Invoke ("removeText", 5);
 	}
 	
 	void removeText() {
-		//string textBox = GameObject.Find("textBox").GetType;
-		//Debug.Log (GameObject.Find("textBox").name);
-		// try to get the dynamic label and fade out before nulling the value
-		/*
-		 while (fadeCanvasGroup.alpha < 1f) {
-			fadeCanvasGroup.alpha += speed * Time.deltaTime;
-		}
-		*/
-		
-		thisString = "";
+		Text thisString = messageBox.GetComponent<Text>();
+		// try fade out before nulling the value
+		thisString.text = "";
 	}
 	
-	void OnGUI() {
-		Font thisFont;
-		//random fonts for testing
-		//thisFont = Resources.Load<Font> ("LcdStd");
-		//thisFont = Resources.Load<Font> ("PhoenixScript");
-		//thisFont = Resources.Load<Font> ("MAGNETOB");
-		thisFont = Resources.Load<Font> ("Japonesa_0");
-		
-		myStyle.font = thisFont;
-		myStyle.fontSize = 20;
-		myStyle.normal.textColor = Color.black;
-		myStyle.alignment = TextAnchor.MiddleCenter;
-		myStyle.wordWrap = true;
-		myStyle.fixedWidth = textWidth;
-		myStyle.fixedHeight = textHeight;
-		myStyle.name = "textBox";
-		
-		rctOff = GUI.skin.customStyles[0].overflow;
-		myStyle.overflow = rctOff;
-
-		GUI.Label (new Rect (Screen.width / 2 - textWidth / 2, textBoxTop, 100, 30), thisString, myStyle);
-
-		/*
-		if(GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height - 50, 200, 30), "Unlock Door")) {
-			if(OnClicked != null)
-				OnClicked();
-		}
-		*/
-	}
+//	void OnGUI() {
+//		//left in for reference only
+//		Font thisFont;
+//		//random fonts for testing
+//		//thisFont = Resources.Load<Font> ("LcdStd");
+//		//thisFont = Resources.Load<Font> ("PhoenixScript");
+//		//thisFont = Resources.Load<Font> ("MAGNETOB");
+//		thisFont = Resources.Load<Font> ("Japonesa_0");
+//		
+//		myStyle.font = thisFont;
+//		myStyle.fontSize = 20;
+//		myStyle.normal.textColor = Color.black;
+//		myStyle.alignment = TextAnchor.MiddleCenter;
+//		myStyle.wordWrap = true;
+//		myStyle.fixedWidth = textWidth;
+//		myStyle.fixedHeight = textHeight;
+//		myStyle.name = "textBox";
+//		
+//		rctOff = GUI.skin.customStyles[0].overflow;
+//		myStyle.overflow = rctOff;
+//
+//		GUI.Label (new Rect (Screen.width / 2 - textWidth / 2, textBoxTop, 100, 30), thisString, myStyle);
+//
+//		/*
+//		if(GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height - 50, 200, 30), "Unlock Door")) {
+//			if(OnClicked != null)
+//				OnClicked();
+//		}
+//		*/
+//	}
 
 	void addInventoryItems() {
 		//room 1 objects
@@ -140,6 +132,7 @@ public class EventManager : MonoBehaviour {
 	}
 
 	void getUIElements(){
+		invTab = GameObject.Find ("inventory_image");
 		invBox = GameObject.Find ("inventory");
 
 	}

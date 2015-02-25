@@ -103,12 +103,14 @@ public class proxObj : EventManager {
 
 		if (Input.GetMouseButton (1)) {
 			// right button clicked;
-			if(objects.TryGetValue(thisObject.name, out temp)){
-				base.displayMessage (temp, 4);
-			}
-			else {
-				base.displayMessage ("", 1);
-				Debug.Log (thisObject.name + " not in Dictionary");
+			if(!EventSystem.current.IsPointerOverGameObject()) {
+				if(objects.TryGetValue(thisObject.name, out temp)){
+					base.displayMessage (temp);
+				}
+				else {
+					base.displayMessage ("");
+					Debug.Log (thisObject.name + " not in Dictionary");
+				}
 			}
 		}
 
@@ -121,7 +123,7 @@ public class proxObj : EventManager {
 			Debug.Log ("Checking code " + thisCode);
 			
 			if(thisCode == int.Parse(tappedCode)) {
-				base.displayMessage ("Unlocking door 1", 1);
+				base.displayMessage ("Unlocking door 1");
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
 				singleDoor.GetComponent<proxDoor>().unlockDoor();
@@ -192,7 +194,10 @@ public class proxObj : EventManager {
 
 				// once slot has been set remove the selected object from game
 				Destroy (thisObject);
-				base.displayMessage (thisOne.GetComponent<slot>().itemName + " added to inventory", 1);
+				string tempString = thisOne.GetComponent<slot>().itemName + " added to inventory";
+				if(tempString[0] == '~') tempString = tempString.Substring(1);
+				//if(tempString[0] == '~') tempString = tempString.Remove(0,1);
+				base.displayMessage(tempString);
 				break; // break statement appears to not work at all, it sets every button anyhoo
 			}
 		}

@@ -25,34 +25,34 @@ public class slot : EventManager {
 
 	protected override void Update () {
 		base.Update ();
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
-		Physics.Raycast(ray, out hit);
-		if(hit.transform.gameObject != null) thisObject = hit.transform.gameObject;
-		
-		if (Input.GetMouseButton (0) && !EventSystem.current.IsPointerOverGameObject()) {
-			// left button clicked;
-			Debug.Log("left " + thisObject.name);
-		}
-
-		if (Input.GetMouseButton (1) && !EventSystem.current.IsPointerOverGameObject()) {
-			// right button clicked;
-			Debug.Log("right " + thisObject.name);
-		}
-
-		if (Input.GetMouseButton (2) && !EventSystem.current.IsPointerOverGameObject()) {
-			// middle button clicked;
-			Debug.Log("center " + thisObject.name);
-		}
 	}
 
 	// Uses the item
-	public void Use() {
+	public void clicked() {
 		// stuff goes here
-		Debug.Log ("WOOT");
+		if (Input.GetMouseButton (0)) {
+			// left button clicked...
+			if(itemName != "") {
+				Debug.Log("Using " + itemName);
+			}
+		}
+		
+		if (Input.GetMouseButton (1)) {
+			// right button clicked...display info
+			if(itemDescription != "") {
+				if(itemName[0] == '~') {
+					GameObject overlay = GameObject.Find (itemName);
+					overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, overlay.transform.position.y);
+				}
+				else {
+					base.displayMessage(itemDescription);
+				}
+			}
+		}
+		
+		if (Input.GetMouseButton (2)) {
+			// middle button clicked...not working for some reason
+		}
 	}
 
-	public void displayInfo() {
-		Debug.Log ("hiya");
-	}
 }

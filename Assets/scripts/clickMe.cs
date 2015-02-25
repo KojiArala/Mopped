@@ -22,7 +22,7 @@ public class clickMe : EventManager {
 		*/
 		
 		// Use this one to unlock a single door
-		base.displayMessage (Random.Range(-10.0F, 10.0F).ToString() + "\nUnlocking door 1", 2);
+		base.displayMessage (Random.Range(-10.0F, 10.0F).ToString() + "\nUnlocking door 1");
 		GameObject singleDoor;
 		singleDoor = GameObject.Find("door_room1");
 		singleDoor.GetComponent<proxDoor>().unlockDoor();
