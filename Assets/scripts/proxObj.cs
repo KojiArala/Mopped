@@ -63,7 +63,12 @@ public class proxObj : EventManager {
 		if (Input.GetMouseButton (0)) {
 			//Debug.Log("Clicked on a GameObject (on GUI) " + EventSystem.current.IsPointerOverGameObject());
 			// left button clicked;
-			if (base.stationary && (thisObject.tag == "obj" || thisObject.tag == "obj_pickup" || thisObject.tag == "keypad" || thisObject.tag == "floor") && !EventSystem.current.IsPointerOverGameObject()) {
+			if (base.stationary
+			    				&& (thisObject.tag == "obj" ||
+			                        thisObject.tag == "obj_pickup" ||
+			                        thisObject.tag == "keypad" ||
+			                        thisObject.tag == "floor")
+			    				&& !EventSystem.current.IsPointerOverGameObject()) {
 				if(thisObject.tag == "keypad" && keypadClosed){
 					//Debug.Log (thisObject.name);
 					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
@@ -74,7 +79,7 @@ public class proxObj : EventManager {
 							thisCode = tempCode;
 						}
 						else {
-							Debug.Log ("ERROR: proxObj line 70 keypad code does not exist in dictionary");
+							Debug.Log ("ERROR: proxObj keypad code does not exist in dictionary");
 							thisCode = -100;
 						}
 						//currentDoor
@@ -82,23 +87,25 @@ public class proxObj : EventManager {
 							currentDoor = nameTemp;
 						}
 						else {
-							Debug.Log ("ERROR: proxObj line 70 keypad code does not exist in dictionary");
+							Debug.Log ("ERROR: proxObj keypad code does not exist in dictionary");
 							thisCode = -100;
 						}
 
 					}
 					else {
-						Debug.Log ("ERROR: proxObj line 67 keypad does not exist in dictionary");
+						Debug.Log ("ERROR: proxObj keypad does not exist in dictionary");
 						nameTemp = "ERROR (" + thisObject.name + ")";
 					}
 				}
 				//Debug.Log("Using this code " + thisCode + " for keypad " + nameTemp);
+			}
 
-				//move M2 to clicked position
-				//get vector3 but only use x - z position
+			if(!EventSystem.current.IsPointerOverGameObject()) {//move M2 to clicked position
+				//	get vector3 but only use x - z position
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
 				base.stationary = false;
 			}
+
 		}
 
 		if (Input.GetMouseButton (1)) {
@@ -194,10 +201,10 @@ public class proxObj : EventManager {
 
 				// once slot has been set remove the selected object from game
 				Destroy (thisObject);
-				string tempString = thisOne.GetComponent<slot>().itemName + " added to inventory";
-				if(tempString[0] == '~') tempString = tempString.Substring(1);
-				//if(tempString[0] == '~') tempString = tempString.Remove(0,1);
-				base.displayMessage(tempString);
+//				string tempString = thisOne.GetComponent<slot>().itemName + " added to inventory";
+//				if(tempString[0] == '~') tempString = tempString.Substring(1);
+//				//if(tempString[0] == '~') tempString = tempString.Remove(0,1);
+//				base.displayMessage(tempString);
 				break; // break statement appears to not work at all, it sets every button anyhoo
 			}
 		}

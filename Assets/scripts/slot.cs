@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class slot : EventManager {
 	public Sprite spriteNorm;
@@ -33,7 +34,12 @@ public class slot : EventManager {
 		if (Input.GetMouseButton (0)) {
 			// left button clicked...
 			if(itemName != "") {
-				Debug.Log("Using " + itemName);
+				if(useWith != "") {
+					Debug.Log("Use me with " + useWith);
+				}
+				else {
+					Debug.Log("Using " + itemName);
+				}
 			}
 		}
 		
@@ -51,7 +57,29 @@ public class slot : EventManager {
 		}
 		
 		if (Input.GetMouseButton (2)) {
-			// middle button clicked...not working for some reason
+			// middle button clicked
+			Debug.Log("middle click");
+		}
+	}
+
+	void checkInventory(){
+		Button[] buttons;
+		buttons = base.invBox.GetComponentsInChildren<Button>();
+		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
+//			if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
+//				thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
+//				thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
+//				thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
+//				thisOne.GetComponent<slot>().slotEmpty = false;
+//				
+//				thisOne.GetComponent<Image>().sprite = thisObject.GetComponent<proxObj>().spriteNorm;
+//				SpriteState st = new SpriteState();
+//				st.highlightedSprite = thisObject.GetComponent<proxObj>().spriteHigh;
+//				st.pressedSprite = thisObject.GetComponent<proxObj>().spriteNorm;
+//				thisOne.spriteState = st;
+//
+//				break;
+//			}
 		}
 	}
 

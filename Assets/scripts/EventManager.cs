@@ -9,10 +9,12 @@ public class EventManager : MonoBehaviour {
 	//public static event ClickAction OnClicked;
 	protected GameObject m2;
 	protected Vector3 m2Pos;
+	protected Vector3 m2Rot;
 	protected bool stationary = false;
 	protected Vector3 moveTo;
 	protected Vector3 lastPosition;
-	private float moveSpeed = 2f;
+	private float moveSpeed = 1f;
+	private float turnSpeed = 1f;
 	protected List<inventory> inventory = new List<inventory>();
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
@@ -57,13 +59,21 @@ public class EventManager : MonoBehaviour {
 	protected virtual void Update () {
 		m2Pos = m2.transform.position;
 		if (lastPosition != moveTo) {
+			m2.transform.Translate(new Vector3(0,0,0));
 			lastPosition = moveTo;
+			// remove following line once smooth rotation is working
 			m2.transform.LookAt(moveTo);
+			// setting Rotation point isn't working
+			//m2Rot = new Vector3(moveTo.x, 0, moveTo.z);
 		}
 
 		if (!stationary) {
-			m2.transform.position = Vector3.Lerp(m2.transform.position, moveTo, Time.deltaTime * moveSpeed);
-			//if(m2.transform.position == moveTo) { // OLD version caused a very small math error
+			//smooth rotation not working yet
+			//m2.transform.rotation = Quaternion.Slerp(m2.transform.rotation,Quaternion.LookRotation(m2Rot),Time.deltaTime * turnSpeed);
+
+			//m2.transform.position = Vector3.Lerp(m2Pos, moveTo, Time.deltaTime * moveSpeed);
+			m2.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
+
 			if(Vector3.Distance (m2.transform.position, moveTo) < .2f) {
 				stationary = true;
 				//Debug.Log ("FINAL: " + m2.transform.position + " ~~~ " + moveTo);

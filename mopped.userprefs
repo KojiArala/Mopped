@@ -1,13 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\proxObj.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\EventManager.cs">
     <Files>
-      <File FileName="Assets\scripts\toggleInventory.cs" Line="8" Column="21" />
-      <File FileName="Assets\scripts\slot.cs" Line="46" Column="1" />
-      <File FileName="Assets\scripts\hideOverlay.cs" Line="3" Column="32" />
-      <File FileName="Assets\scripts\proxObj.cs" Line="199" Column="7" />
-      <File FileName="Assets\scripts\EventManager.cs" Line="89" Column="43" />
-      <File FileName="c:\Docs\Art Instatute\classes\GAD413 Team Prodiction\project\Mopped\Assets\scripts\clickMe.cs" Line="25" Column="85" />
+      <File FileName="Assets\scripts\slot.cs" Line="41" Column="6" />
+      <File FileName="Assets\scripts\proxObj.cs" Line="105" Column="42" />
+      <File FileName="Assets\scripts\toggleInventory.cs" Line="17" Column="81" />
+      <File FileName="Assets\scripts\EventManager.cs" Line="14" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
