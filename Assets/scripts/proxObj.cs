@@ -66,7 +66,13 @@ public class proxObj : EventManager {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		Physics.Raycast(ray, out hit);
-		if(hit.transform.gameObject != null) thisObject = hit.transform.gameObject;
+		try {
+			thisObject = hit.transform.gameObject;
+		}
+		catch (System.Exception e) {
+			// Error catching stuff to do here is needed
+			string errorString = e.ToString();
+		}
 
 		if (Input.GetMouseButton (0)) {
 			// left button clicked;
