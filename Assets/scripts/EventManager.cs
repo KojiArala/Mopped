@@ -19,42 +19,77 @@ public class EventManager : MonoBehaviour {
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
 	protected int offset = 1000;
+	protected int guiBottom = 230;
+	public GameObject messageBox;
+	protected static string pickedObject;
 
+	// camera positions and rotations
+	public static int currentRoom = 1;
+	public struct cameraPosRot {
+		public Vector3 camPos;
+		public Vector3 camRot;
+		
+		public cameraPosRot(Vector3 posTemp, Vector3 rotTemp) {
+			camPos = posTemp;
+			camRot = rotTemp;
+		}
+	}
+	public List<cameraPosRot> cameras = new List<cameraPosRot>();
+	
 	// UI elements
 	protected GameObject invBox;
 	protected GameObject invTab;
+	protected static GameObject emptySlot;
+	protected static GameObject pickedSlotIcon;
+	protected static float slotX;
+	protected static float slotY;
+	protected static float slotZ;
+	protected static bool slotPicked;
+	protected static string useItemWith;
+	protected static bool iconMoving;
 
 	// keypad code setup
 	public static int thisCode;
 	public static string tappedCode;
 	public static string numberTemp;
 	public static bool keypadClosed = true;
-	public GameObject messageBox;
-
 
 	void Awake () {
 		m2 = GameObject.Find("m2");
 		messageBox = GameObject.Find("message");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
-		addInventoryItems ();
-		getUIElements ();
+		addRoomCameras();
+		addInventoryItems();
+		getUIElements();
 
 		// to get all text children of a canvas
 		//GameObject canvas = GameObject.Find("Canvas");
 		//Text[] textValue = canvas.GetComponentsInChildren<Text>();
 		//textValue[0].text = "hey";
-		
+
+		pickedObject = "";
+
 		thisCode = -10;
 		tappedCode = "-42";
 		numberTemp = "";
 
-	}
+		slotX = -100;
+		slotY = -100;
+		slotZ = -100;
+		slotPicked = false;
+		useItemWith = "";
+		iconMoving = false;
+
+		Camera.main.transform.position = cameras[currentRoom].camPos;
+		Camera.main.transform.rotation = Quaternion.Euler(cameras[currentRoom].camRot);
+		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
+	} // END Awake
 	
 	protected virtual void Start() {
 		// protected or public to use virtual (parent)
 		//textBoxMe.SetActive(false);	// uncomment to hide by default
-	}
+	} // END Start
 
 	protected virtual void Update () {
 		m2Pos = m2.transform.position;
@@ -79,27 +114,75 @@ public class EventManager : MonoBehaviour {
 				//Debug.Log ("FINAL: " + m2.transform.position + " ~~~ " + moveTo);
 			}
 		}
-		//Debug.Log (stationary);
-	}
+	} // END Update
 
 	protected Vector3 getM2Pos(){
 		return m2Pos;
-	}
+	} // END getM2Pos
 	
 	protected void displayMessage(string displayString) {
+		// convert escaped line breaks to real ones
+		displayString = displayString.Replace("\\n", "\n");
 		Text thisString = messageBox.GetComponent<Text>();
 		thisString.text = displayString;
 
 		//CancelInvoke();
 		Invoke ("removeText", 5);
-	}
+	} // END displayMessage
 	
 	void removeText() {
 		Text thisString = messageBox.GetComponent<Text>();
 		// try fade out before nulling the value
 		thisString.text = "";
+	} // END removeText
+
+	protected void useItem() {
+		// can use item with clicked world object so do it here
+		useInventoryItem();
+		
+		// now clear floating slot
+		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
+		// change slot variables to emptySlot
+		pickedSlotIcon.name = "slot";
+		pickedSlotIcon.GetComponent<slot>().itemName = null;
+		pickedSlotIcon.GetComponent<slot>().itemDescription = null;
+		pickedSlotIcon.GetComponent<slot>().useWith = null;
+		pickedSlotIcon.GetComponent<slot>().slotEmpty = true;
+
+		pickedSlotIcon.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;
+		pickedSlotIcon.GetComponent<slot>().spriteHigh = emptySlot.GetComponent<slot>().spriteHigh;
+		pickedSlotIcon.GetComponent<slot>().spriteNorm2 = emptySlot.GetComponent<slot>().spriteNorm2;
+		pickedSlotIcon.GetComponent<slot>().spriteHigh2 = emptySlot.GetComponent<slot>().spriteHigh2;
+		pickedSlotIcon.GetComponent<slot>().overlayNorm2 = emptySlot.GetComponent<slot>().overlayNorm2;
+		pickedSlotIcon.GetComponent<slot>().overlayHigh2 = emptySlot.GetComponent<slot>().overlayHigh2;
+
+		// change image to emptySlot
+		pickedSlotIcon.GetComponent<Image>().sprite = emptySlot.GetComponent<slot>().spriteNorm;
+		// change button states to emptySlot
+		SpriteState st = new SpriteState();
+		st.highlightedSprite = emptySlot.GetComponent<slot>().spriteHigh;
+		st.pressedSprite = emptySlot.GetComponent<slot>().spriteNorm;
+		pickedSlotIcon.GetComponent<Button>().spriteState  = st;
+		moveSlotBack();
+	}// END useItem
+
+	protected void dontUseItem(string thisString) {
+		// can't use item with clicked world object, keep slot variables the same
+		string firstObj = pickedSlotIcon.GetComponent<slot>().itemName;
+		if(firstObj != "" && firstObj[0] == '~') firstObj = firstObj.Substring(1);
+		string secondObj = thisString;
+		if(secondObj != "" && secondObj[0] == '~') secondObj = secondObj.Substring(1);
+		displayMessage("Sorry, you can't use " + firstObj + " with " + secondObj);
+		moveSlotBack();
+	} // END dontUseItem
+
+	void moveSlotBack() {
+		// move "slot back to (slotX, slotY), Cancel mouse follow
+		pickedSlotIcon.transform.position = new Vector3(slotX, slotY, slotZ);
+		slotPicked = false;
+		iconMoving = false;
 	}
-	
+
 //	void OnGUI() {
 //		//left in for reference only
 //		Font thisFont;
@@ -129,8 +212,15 @@ public class EventManager : MonoBehaviour {
 //				OnClicked();
 //		}
 //		*/
-//	}
+//	} // END OnGUI
 
+	void addRoomCameras() {
+		// room 0, start menu screen?
+		cameras.Add (new cameraPosRot (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0)));
+		// room 1+
+		cameras.Add (new cameraPosRot (new Vector3 (-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0)));
+	} // END addRoomCameras
+	
 	void addInventoryItems() {
 		//room 1 objects
 		inventoryOverlay.Add ("bucket", "Bucket object in your inventory now");
@@ -138,13 +228,56 @@ public class EventManager : MonoBehaviour {
 		inventoryOverlay.Add ("notebook", "Notebook, ode to pulp");
 		inventoryOverlay.Add ("bottle", "Bottle, not just for babies anymore");
 		//room 2 objects
-
-	}
+	} // END addInventoryItems
 
 	void getUIElements(){
 		invTab = GameObject.Find ("inventory_image");
 		invBox = GameObject.Find ("inventory");
+		emptySlot = GameObject.Find ("emptySlot");
+		//OLD pickedSlotIcon = GameObject.Find ("pickedSlot");
 
+	} // END getUIElements
+
+	void useInventoryItem() {
+		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
+		Debug.Log("Code for using items goes here (use with " + useItemWith + ")");
+		// useItemWith is name of picked object so switch/case statement to handle what to do
+		switch (useItemWith) {
+		case "notebook":
+			// clicked pencil on notebook
+			doNotebook();
+			break;
+		default:
+			Debug.Log("No option available in useInventoryItem for item " + useItemWith);
+			//print("Incorrect intelligence level.");
+			break;
+		}
+
+		
+	} // END useInventoryItem
+
+	void doNotebook() {
+		GameObject iconObj = GameObject.Find ("notebook");
+		GameObject overlayObj = GameObject.Find ("~notebook");
+
+		iconObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().spriteNorm2;
+		SpriteState st = new SpriteState();
+		st.highlightedSprite = iconObj.GetComponent<slot>().spriteNorm2;
+		st.pressedSprite = iconObj.GetComponent<slot>().spriteNorm2;
+		iconObj.GetComponent<Button>().spriteState = st;
+
+		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
+
+		Debug.Log("TEST: " + useItemWith);
 	}
 
-}
+} // END class
+
+
+
+
+
+
+
+
+

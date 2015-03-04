@@ -17,18 +17,26 @@ public class proxObj : EventManager {
 	private string nameTemp = null;
 	private int tempCode;
 	private string currentDoor;
+	private GameObject currentKeypad;
 	private Text txt;
 	private Image[] images;
 	private Button[] buttons;
 	private GameObject thisObject;
 	private GameObject tempObject;
 	
-	public Sprite spriteNorm;
-	public Sprite spriteHigh;
 	public string itemName;
 	public string itemDescription;
 	public string useWith;
-	
+
+	// sprites for the button, normal
+	public Sprite spriteNorm;
+	public Sprite spriteHigh;
+	// sprites for the button, second state for "used" items
+	public Sprite spriteNorm2;
+	public Sprite spriteHigh2;
+	public Sprite overlayNorm2;
+	public Sprite overlayHigh2;
+
 	public int maxSize; // The max amount of times the item can stack
 
 	protected override void Start () {
@@ -38,7 +46,7 @@ public class proxObj : EventManager {
 		addGameObjects();
 		thisCode = -100;
 		currentDoor = null;
-	}
+	} // END Start
 	
 	// Update is called once per frame
 	protected override void Update () {
@@ -61,9 +69,18 @@ public class proxObj : EventManager {
 		if(hit.transform.gameObject != null) thisObject = hit.transform.gameObject;
 
 		if (Input.GetMouseButton (0)) {
-			//Debug.Log("Clicked on a GameObject (on GUI) " + EventSystem.current.IsPointerOverGameObject());
 			// left button clicked;
-			if (base.stationary
+			if(slotPicked && !EventSystem.current.IsPointerOverGameObject()) {
+				// something picked up so check if usable in world space
+				if(thisObject.name == useItemWith) {
+					base.useItem();
+				}
+				else {
+					dontUseItem(thisObject.name);
+				}
+			}
+
+			else if (base.stationary && slotPicked
 			    				&& (thisObject.tag == "obj" ||
 			                        thisObject.tag == "obj_pickup" ||
 			                        thisObject.tag == "keypad" ||
@@ -73,7 +90,7 @@ public class proxObj : EventManager {
 					//Debug.Log (thisObject.name);
 					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
 						tempObject = GameObject.Find (nameTemp);
-						tempObject.transform.position = new Vector2 (500, tempObject.transform.position.y);
+						tempObject.transform.position = new Vector2 (tempObject.transform.position.x + base.offset, base.guiBottom);
 						keypadClosed = false;
 						if(keypadCodes.TryGetValue(thisObject.name, out tempCode)){
 							thisCode = tempCode;
@@ -85,6 +102,7 @@ public class proxObj : EventManager {
 						//currentDoor
 						if(doors.TryGetValue(thisObject.name, out nameTemp)){
 							currentDoor = nameTemp;
+							currentKeypad = thisObject;
 						}
 						else {
 							Debug.Log ("ERROR: proxObj keypad code does not exist in dictionary");
@@ -96,8 +114,7 @@ public class proxObj : EventManager {
 						Debug.Log ("ERROR: proxObj keypad does not exist in dictionary");
 						nameTemp = "ERROR (" + thisObject.name + ")";
 					}
-				}
-				//Debug.Log("Using this code " + thisCode + " for keypad " + nameTemp);
+				} // END check if a keypad IF
 			}
 
 			if(!EventSystem.current.IsPointerOverGameObject()) {//move M2 to clicked position
@@ -105,8 +122,7 @@ public class proxObj : EventManager {
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
 				base.stationary = false;
 			}
-
-		}
+		} // END left button click IF
 
 		if (Input.GetMouseButton (1)) {
 			// right button clicked;
@@ -119,40 +135,41 @@ public class proxObj : EventManager {
 					Debug.Log (thisObject.name + " not in Dictionary");
 				}
 			}
-		}
+		} // END right button click IF
 
 		if (Input.GetMouseButton (2)) {
 			// middle button clicked;
-		}
+		} // END middle button click IF
 
 		//check keypad code entry if keypad code is loaded
 		if (thisCode > 0) {
 			Debug.Log ("Checking code " + thisCode);
 			
 			if(thisCode == int.Parse(tappedCode)) {
-				base.displayMessage ("Unlocking door 1");
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
 				singleDoor.GetComponent<proxDoor>().unlockDoor();
-				
+				base.displayMessage ("Unlocking " + singleDoor.GetComponent<proxDoor>().doorName);
+
 				tempObject.transform.position = new Vector2 (-300, tempObject.transform.position.y);
 				keypadClosed = true;
 				thisCode = -100;
 				tappedCode = "-42";
 				currentDoor = null;
-				Debug.Log("OPENED");
+				currentKeypad.gameObject.tag = "Untagged";
+				currentKeypad = null;
+				Debug.Log("OPENED " + singleDoor.GetComponent<proxDoor>().doorName);
 			}
-		}
-		
-	}
+		} // END keypad code IF
+	} // END Update
 
 	void OnMouseDown () {
 		// only for left click
 		if(this.tag == "obj_pickup") {
-			addToInventory();
+			if(!slotPicked) addToInventory();
 		}
-	}
-	
+	} // END OnMouseDown
+
 	void addGameObjects (){
 		//keypads
 		//	name of keypad object in room
@@ -164,14 +181,14 @@ public class proxObj : EventManager {
 		//	code to use for the selected keypad
 		keypadCodes.Add ("door_keypad_room1", 9432);
 
-
 		//keypad codes
 		//	name of keypad object in room
 		//	code to use for the selected keypad
 		doors.Add ("door_keypad_room1", "door_room1");
-		
-		
+
 		//room 1 objects
+		//	name of room object
+		//	descriptive text for that object
 		objects.Add ("bucket", "Bucket, contains Class 1 cleaning solution.\nAlly in war on floor based contaminants.\n\n");
 		objects.Add ("pencil", "Pencil. Non-permanent writing implement.\nFrequent source of floor debris.\n\n");
 		objects.Add ("notebook", "Paper notepad. Labeled as property\nof Maintenance Chief Harlow.\n\n");
@@ -180,17 +197,27 @@ public class proxObj : EventManager {
 		objects.Add ("door_keypad_room1", "Hey look...a keypad\non the wall\n\n");
 		//room 2 objects
 
-	}
+	} // END addGameObjects
 
 	void addToInventory(){
 		bool slotFound = false;
 		buttons = base.invBox.GetComponentsInChildren<Button>();
 		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
 			if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
+				string tempNameString = thisObject.GetComponent<proxObj>().itemName;
+				if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
+				thisOne.name = tempNameString;
 				thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
 				thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
 				thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
 				thisOne.GetComponent<slot>().slotEmpty = false;
+
+				thisOne.GetComponent<slot>().spriteNorm = thisObject.GetComponent<proxObj>().spriteNorm;
+				thisOne.GetComponent<slot>().spriteHigh = thisObject.GetComponent<proxObj>().spriteHigh;
+				thisOne.GetComponent<slot>().spriteNorm2 = thisObject.GetComponent<proxObj>().spriteNorm2;
+				thisOne.GetComponent<slot>().spriteHigh2 = thisObject.GetComponent<proxObj>().spriteHigh2;
+				thisOne.GetComponent<slot>().overlayNorm2 = thisObject.GetComponent<proxObj>().overlayNorm2;
+				thisOne.GetComponent<slot>().overlayHigh2 = thisObject.GetComponent<proxObj>().overlayHigh2;
 
 				thisOne.GetComponent<Image>().sprite = thisObject.GetComponent<proxObj>().spriteNorm;
 				SpriteState st = new SpriteState();
@@ -201,17 +228,47 @@ public class proxObj : EventManager {
 
 				// once slot has been set remove the selected object from game
 				Destroy (thisObject);
-//				string tempString = thisOne.GetComponent<slot>().itemName + " added to inventory";
 //				if(tempString[0] == '~') tempString = tempString.Substring(1);
 //				//if(tempString[0] == '~') tempString = tempString.Remove(0,1);
-//				base.displayMessage(tempString);
+
 				break; // break statement appears to not work at all, it sets every button anyhoo
 			}
 		}
 		if(!slotFound) {
 			// all slots are full, no more room in inventory
 			Debug.Log("Inventory full, please clear something out before trying to add something new.");
+			base.displayMessage("Inventory full, please clear something out before trying to add something new.");
 		}
-		
-	}
+	} // END addToInventory
+
+	void clearEmptySlots(){
+		buttons = base.invBox.GetComponentsInChildren<Button>();
+		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
+			if(thisOne.GetComponent<slot>().slotEmpty) {
+				thisOne.name = "slot";
+				// change slot variables to emptySlot
+				thisOne.GetComponent<slot>().itemName = null;
+				thisOne.GetComponent<slot>().itemDescription = null;
+				thisOne.GetComponent<slot>().useWith = null;
+				thisOne.GetComponent<slot>().slotEmpty = true;
+
+				thisOne.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;
+				thisOne.GetComponent<slot>().spriteHigh = emptySlot.GetComponent<slot>().spriteHigh;
+				thisOne.GetComponent<slot>().spriteNorm2 = emptySlot.GetComponent<slot>().spriteNorm2;
+				thisOne.GetComponent<slot>().spriteHigh2 = emptySlot.GetComponent<slot>().spriteHigh2;
+				thisOne.GetComponent<slot>().overlayNorm2 = emptySlot.GetComponent<slot>().overlayNorm2;
+				thisOne.GetComponent<slot>().overlayHigh2 = emptySlot.GetComponent<slot>().overlayHigh2;
+
+				thisOne.GetComponent<Image>().sprite = emptySlot.GetComponent<slot>().spriteNorm;
+				SpriteState st = new SpriteState();
+				st.highlightedSprite = emptySlot.GetComponent<slot>().spriteNorm;
+				st.pressedSprite = emptySlot.GetComponent<slot>().spriteNorm;
+				thisOne.spriteState = st;
+				
+				break;
+			}
+		}
+	} // END clearEmptySlots
+	
+
 }

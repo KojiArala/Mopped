@@ -14,6 +14,7 @@ public class proxDoor : EventManager {
 	private float doorSpeed = 12f;
 	private Vector3 doorMin;
 	private Vector3 doorMax;
+	public string doorName;
 
 	protected override void Start () {
 		// protected or public to use override (child), call base.Start() to cascade them
