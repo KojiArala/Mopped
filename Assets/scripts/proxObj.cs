@@ -56,11 +56,10 @@ public class proxObj : EventManager {
 
 		if (this.tag == "room_structure") {
 			// delta for support beam is ok but not working correctly for walls...scale issue???
-			//Debug.Log (this.tag + " ~~~ " + this.name);
 		}
 
 		if(delta < 3) {
-			//Debug.Log ("M2 is within range of " + this.name);
+			// M2 is within range of "this.name"
 		}
 
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -79,14 +78,14 @@ public class proxObj : EventManager {
 			if(slotPicked && !EventSystem.current.IsPointerOverGameObject()) {
 				// something picked up so check if usable in world space
 				if(thisObject.name == useItemWith) {
-					base.useItem();
+					base.useItem(true);
 				}
 				else {
 					dontUseItem(thisObject.name);
 				}
 			}
 
-			else if (base.stationary && slotPicked
+			else if (base.stationary && !iconMoving
 			    				&& (thisObject.tag == "obj" ||
 			                        thisObject.tag == "obj_pickup" ||
 			                        thisObject.tag == "keypad" ||
@@ -234,9 +233,6 @@ public class proxObj : EventManager {
 
 				// once slot has been set remove the selected object from game
 				Destroy (thisObject);
-//				if(tempString[0] == '~') tempString = tempString.Substring(1);
-//				//if(tempString[0] == '~') tempString = tempString.Remove(0,1);
-
 				break; // break statement appears to not work at all, it sets every button anyhoo
 			}
 		}

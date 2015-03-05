@@ -46,7 +46,7 @@ public class slot : EventManager {
 			mouseCoords = new Vector3(hit.point.x, hit.point.y, hit.point.z);
 
 			mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			mousePosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			//mousePosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
 //			pickedSlotIcon.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 //			pickedSlotIcon.transform.position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -63,12 +63,12 @@ public class slot : EventManager {
 			// left button clicked...
 			if(itemName != "" && !slotPicked) {
 				// move overlay into position
-				if(itemName[0] == '~') {
-					GameObject overlay = GameObject.Find (itemName);
-					if(overlay.transform.position.x < 0) overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, base.guiBottom);
-					slotPicked = false;
-				}
-				else if (!slotPicked) {
+//				if(itemName[0] == '~') {
+//					GameObject overlay = GameObject.Find (itemName);
+//					if(overlay.transform.position.x < 0) overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, base.guiBottom);
+//					slotPicked = false;
+//				}
+//				else if (!slotPicked) {
 					// use keyword static (see EventManager) with no initial value to make it global and just
 					// one instance otherwise it makes a new instance of the variable with each unique click
 					slotX = this.transform.position.x;
@@ -79,23 +79,34 @@ public class slot : EventManager {
 					iconMoving = true;
 					// attach slot to mouse
 					pickedSlotIcon = GameObject.Find (this.name);
-				}
+//				}
 			}
 
 			else if(iconMoving) {
 				// something picked up so check if usable with another inventory item
 				if(this.name == useItemWith) {
-					base.useItem();
+					base.useItem(true);
 				}
 				else {
-					dontUseItem(this.itemName);
+					base.swapSlot(this);
 				}
+//				if(this.GetComponent<slot>().slotEmpty) {
+//					base.swapSlot(this);
+//				}
+//				else {
+//					dontUseItem(this.itemName);
+//				}
 			}
 		} // END left button click IF
 
 		if (Input.GetMouseButton (1)) {
 			// right button clicked...display info
-			if(itemDescription != "") {
+			if(itemName[0] == '~') {
+				GameObject overlay = GameObject.Find (itemName);
+				if(overlay.transform.position.x < 0) overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, base.guiBottom);
+				//slotPicked = false;
+			}
+			else if(itemDescription != "") {
 				base.displayMessage(itemDescription);
 			}
 		} // END right button click IF

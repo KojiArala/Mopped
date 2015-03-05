@@ -9,7 +9,7 @@ public class hideOverlay : EventManager {
 
 		if(!slotPicked) this.transform.position = new Vector2 (this.transform.position.x - base.offset, this.transform.position.y);
 		if(tempObjName == useItemWith) {
-			base.useItem();
+			base.useItem(false);
 		}
 	}
 

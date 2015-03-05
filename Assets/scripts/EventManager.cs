@@ -40,6 +40,7 @@ public class EventManager : MonoBehaviour {
 	protected GameObject invBox;
 	protected GameObject invTab;
 	protected static GameObject emptySlot;
+	protected static GameObject tempSwapSlot;
 	protected static GameObject pickedSlotIcon;
 	protected static float slotX;
 	protected static float slotY;
@@ -136,13 +137,11 @@ public class EventManager : MonoBehaviour {
 		thisString.text = "";
 	} // END removeText
 
-	protected void useItem() {
+	protected void useItem(bool useItem) {
 		// can use item with clicked world object so do it here
-		useInventoryItem();
+		if(useItem) useInventoryItem();
 		
-		// now clear floating slot
-		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
-		// change slot variables to emptySlot
+//		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 		pickedSlotIcon.name = "slot";
 		pickedSlotIcon.GetComponent<slot>().itemName = null;
 		pickedSlotIcon.GetComponent<slot>().itemDescription = null;
@@ -156,9 +155,7 @@ public class EventManager : MonoBehaviour {
 		pickedSlotIcon.GetComponent<slot>().overlayNorm2 = emptySlot.GetComponent<slot>().overlayNorm2;
 		pickedSlotIcon.GetComponent<slot>().overlayHigh2 = emptySlot.GetComponent<slot>().overlayHigh2;
 
-		// change image to emptySlot
 		pickedSlotIcon.GetComponent<Image>().sprite = emptySlot.GetComponent<slot>().spriteNorm;
-		// change button states to emptySlot
 		SpriteState st = new SpriteState();
 		st.highlightedSprite = emptySlot.GetComponent<slot>().spriteHigh;
 		st.pressedSprite = emptySlot.GetComponent<slot>().spriteNorm;
@@ -168,11 +165,19 @@ public class EventManager : MonoBehaviour {
 
 	protected void dontUseItem(string thisString) {
 		// can't use item with clicked world object, keep slot variables the same
+		bool noErr = true;
 		string firstObj = pickedSlotIcon.GetComponent<slot>().itemName;
-		if(firstObj != "" && firstObj[0] == '~') firstObj = firstObj.Substring(1);
+		try {
+			if(firstObj != "" && firstObj[0] == '~') firstObj = firstObj.Substring(1);
+		}
+		catch(System.Exception e) {
+			string errorString = e.ToString();
+			noErr = false;
+		}
+
 		string secondObj = thisString;
 		if(secondObj != "" && secondObj[0] == '~') secondObj = secondObj.Substring(1);
-		displayMessage("Sorry, you can't use " + firstObj + " with " + secondObj);
+		if(noErr) displayMessage("Sorry, you can't use " + firstObj + " with " + secondObj);
 		moveSlotBack();
 	} // END dontUseItem
 
@@ -182,6 +187,103 @@ public class EventManager : MonoBehaviour {
 		slotPicked = false;
 		iconMoving = false;
 	}
+	
+	protected void swapSlot(slot thisSlot) {
+		SpriteState st;
+		string tempNameString;
+
+		/******************************************************
+		 *****************************************************/
+		//tempNameString = thisSlot.itemName;
+		//if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
+		tempSwapSlot.GetComponent<slot>().itemName = pickedSlotIcon.GetComponent<slot>().itemName;
+		tempSwapSlot.GetComponent<slot>().itemDescription = pickedSlotIcon.GetComponent<slot>().itemDescription;
+		tempSwapSlot.GetComponent<slot>().useWith = pickedSlotIcon.GetComponent<slot>().useWith;
+		tempSwapSlot.GetComponent<slot>().slotEmpty = pickedSlotIcon.GetComponent<slot>().slotEmpty;
+		
+		tempSwapSlot.GetComponent<slot>().spriteNorm = pickedSlotIcon.GetComponent<slot>().spriteNorm;
+		tempSwapSlot.GetComponent<slot>().spriteHigh = pickedSlotIcon.GetComponent<slot>().spriteHigh;
+		tempSwapSlot.GetComponent<slot>().spriteNorm2 = pickedSlotIcon.GetComponent<slot>().spriteNorm2;
+		tempSwapSlot.GetComponent<slot>().spriteHigh2 = pickedSlotIcon.GetComponent<slot>().spriteHigh2;
+		tempSwapSlot.GetComponent<slot>().overlayNorm2 = pickedSlotIcon.GetComponent<slot>().overlayNorm2;
+		tempSwapSlot.GetComponent<slot>().overlayHigh2 = pickedSlotIcon.GetComponent<slot>().overlayHigh2;
+		
+		tempSwapSlot.GetComponent<Image>().sprite = pickedSlotIcon.GetComponent<slot>().spriteNorm;
+		st = new SpriteState();
+		st.highlightedSprite = pickedSlotIcon.GetComponent<slot>().GetComponent<slot>().spriteHigh;
+		st.pressedSprite = pickedSlotIcon.GetComponent<slot>().GetComponent<slot>().spriteNorm;
+		tempSwapSlot.GetComponent<Button>().spriteState = st;
+
+		/******************************************************
+		 *****************************************************/
+		tempNameString = thisSlot.itemName;
+		if(tempNameString == "") tempNameString = "slot"; 
+		else if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
+		pickedSlotIcon.name = tempNameString;
+		pickedSlotIcon.GetComponent<slot>().itemName = thisSlot.itemName;
+		pickedSlotIcon.GetComponent<slot>().itemDescription = thisSlot.itemDescription;
+		pickedSlotIcon.GetComponent<slot>().useWith = thisSlot.useWith;
+		pickedSlotIcon.GetComponent<slot>().slotEmpty = thisSlot.slotEmpty;
+		
+		pickedSlotIcon.GetComponent<slot>().spriteNorm = thisSlot.spriteNorm;
+		pickedSlotIcon.GetComponent<slot>().spriteHigh = thisSlot.spriteHigh;
+		pickedSlotIcon.GetComponent<slot>().spriteNorm2 = thisSlot.spriteNorm2;
+		pickedSlotIcon.GetComponent<slot>().spriteHigh2 = thisSlot.spriteHigh2;
+		pickedSlotIcon.GetComponent<slot>().overlayNorm2 = thisSlot.overlayNorm2;
+		pickedSlotIcon.GetComponent<slot>().overlayHigh2 = thisSlot.overlayHigh2;
+		
+		pickedSlotIcon.GetComponent<Image>().sprite = thisSlot.spriteNorm;
+		st = new SpriteState();
+		st.highlightedSprite = thisSlot.spriteHigh;
+		st.pressedSprite = thisSlot.spriteNorm;
+		pickedSlotIcon.GetComponent<Button>().spriteState = st;
+		
+		/******************************************************
+		 *****************************************************/
+		tempNameString = tempSwapSlot.GetComponent<slot>().itemName;
+		if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
+		thisSlot.name = tempNameString;
+		thisSlot.itemName = tempSwapSlot.GetComponent<slot>().itemName;
+		thisSlot.itemDescription = tempSwapSlot.GetComponent<slot>().itemDescription;
+		thisSlot.useWith = tempSwapSlot.GetComponent<slot>().useWith;
+		thisSlot.slotEmpty = tempSwapSlot.GetComponent<slot>().slotEmpty;
+		
+		thisSlot.spriteNorm = tempSwapSlot.GetComponent<slot>().spriteNorm;
+		thisSlot.spriteHigh = tempSwapSlot.GetComponent<slot>().spriteHigh;
+		thisSlot.spriteNorm2 = tempSwapSlot.GetComponent<slot>().spriteNorm2;
+		thisSlot.spriteHigh2 = tempSwapSlot.GetComponent<slot>().spriteHigh2;
+		thisSlot.overlayNorm2 = tempSwapSlot.GetComponent<slot>().overlayNorm2;
+		thisSlot.overlayHigh2 = tempSwapSlot.GetComponent<slot>().overlayHigh2;
+
+		thisSlot.GetComponent<Image>().sprite = tempSwapSlot.GetComponent<slot>().spriteNorm;
+		st = new SpriteState();
+		st.highlightedSprite = tempSwapSlot.GetComponent<slot>().spriteHigh;
+		st.pressedSprite = tempSwapSlot.GetComponent<slot>().spriteNorm;
+		thisSlot.GetComponent<Button>().spriteState  = st;
+
+		/******************************************************
+		 *****************************************************/
+		tempSwapSlot.GetComponent<slot>().itemName = null;
+		tempSwapSlot.GetComponent<slot>().itemDescription = null;
+		tempSwapSlot.GetComponent<slot>().useWith = null;
+		tempSwapSlot.GetComponent<slot>().slotEmpty = true;
+		
+		tempSwapSlot.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;
+		tempSwapSlot.GetComponent<slot>().spriteHigh = emptySlot.GetComponent<slot>().spriteHigh;
+		tempSwapSlot.GetComponent<slot>().spriteNorm2 = emptySlot.GetComponent<slot>().spriteNorm2;
+		tempSwapSlot.GetComponent<slot>().spriteHigh2 = emptySlot.GetComponent<slot>().spriteHigh2;
+		tempSwapSlot.GetComponent<slot>().overlayNorm2 = emptySlot.GetComponent<slot>().overlayNorm2;
+		tempSwapSlot.GetComponent<slot>().overlayHigh2 = emptySlot.GetComponent<slot>().overlayHigh2;
+		
+		tempSwapSlot.GetComponent<Image>().sprite = emptySlot.GetComponent<slot>().spriteNorm;
+		st = new SpriteState();
+		st.highlightedSprite = emptySlot.GetComponent<slot>().spriteHigh;
+		st.pressedSprite = emptySlot.GetComponent<slot>().spriteNorm;
+		tempSwapSlot.GetComponent<Button>().spriteState  = st;
+
+		//useItem(false);
+		moveSlotBack();
+	} // END swapSlot
 
 //	void OnGUI() {
 //		//left in for reference only
@@ -234,14 +336,14 @@ public class EventManager : MonoBehaviour {
 		invTab = GameObject.Find ("inventory_image");
 		invBox = GameObject.Find ("inventory");
 		emptySlot = GameObject.Find ("emptySlot");
-		//OLD pickedSlotIcon = GameObject.Find ("pickedSlot");
+		tempSwapSlot = GameObject.Find ("tempSwapSlot");
 
 	} // END getUIElements
 
 	void useInventoryItem() {
-		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
-		Debug.Log("Code for using items goes here (use with " + useItemWith + ")");
 		// useItemWith is name of picked object so switch/case statement to handle what to do
+		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
+//		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Remove(0,1);
 		switch (useItemWith) {
 		case "notebook":
 			// clicked pencil on notebook
@@ -268,7 +370,6 @@ public class EventManager : MonoBehaviour {
 
 		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
 
-		Debug.Log("TEST: " + useItemWith);
 	}
 
 } // END class
