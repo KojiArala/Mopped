@@ -51,6 +51,7 @@
      <Compile Include="Assets\ZBackups_extras\mouseClick_camera.cs" />
      <Compile Include="Assets\scripts\ClockAnimator.cs" />
      <Compile Include="Assets\scripts\EventManager.cs" />
+     <Compile Include="Assets\scripts\clickInv.cs" />
      <Compile Include="Assets\scripts\clickMe.cs" />
      <Compile Include="Assets\scripts\clickedObject.cs" />
      <Compile Include="Assets\scripts\hideOverlay.cs" />

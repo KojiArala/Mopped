@@ -143,9 +143,9 @@ public class EventManager : MonoBehaviour {
 		
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 		pickedSlotIcon.name = "slot";
-		pickedSlotIcon.GetComponent<slot>().itemName = null;
-		pickedSlotIcon.GetComponent<slot>().itemDescription = null;
-		pickedSlotIcon.GetComponent<slot>().useWith = null;
+		pickedSlotIcon.GetComponent<slot>().itemName = "";
+		pickedSlotIcon.GetComponent<slot>().itemDescription = "";
+		pickedSlotIcon.GetComponent<slot>().useWith = "";
 		pickedSlotIcon.GetComponent<slot>().slotEmpty = true;
 
 		pickedSlotIcon.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;
@@ -181,7 +181,7 @@ public class EventManager : MonoBehaviour {
 		moveSlotBack();
 	} // END dontUseItem
 
-	void moveSlotBack() {
+	protected void moveSlotBack() {
 		// move "slot back to (slotX, slotY), Cancel mouse follow
 		pickedSlotIcon.transform.position = new Vector3(slotX, slotY, slotZ);
 		slotPicked = false;
@@ -359,6 +359,7 @@ public class EventManager : MonoBehaviour {
 	} // END useInventoryItem
 
 	void doNotebook() {
+		print ("in here");
 		GameObject iconObj = GameObject.Find ("notebook");
 		GameObject overlayObj = GameObject.Find ("~notebook");
 
@@ -369,7 +370,6 @@ public class EventManager : MonoBehaviour {
 		iconObj.GetComponent<Button>().spriteState = st;
 
 		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
-
 	}
 
 } // END class

@@ -21,6 +21,7 @@ public class slot : EventManager {
 	public Sprite overlayHigh2;
 
 	private GameObject thisInnerObject;
+	private int mouseOffset = 27;
 
 	protected override void Start () {
 		// protected or public to use override (child), call base.Start() to cascade them
@@ -37,23 +38,14 @@ public class slot : EventManager {
 		base.Update ();
 
 		if(slotPicked) {
-			Vector3 mouseCoords;
-			Vector3 mousePosition;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			//Ray ray = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-			RaycastHit hit;
-			Physics.Raycast(ray, out hit);
-			mouseCoords = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-
-			mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			//mousePosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-
-//			pickedSlotIcon.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//			pickedSlotIcon.transform.position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-			pickedSlotIcon.transform.position = mouseCoords;
-
-			// very tiny return around -10 to 10
-			//Debug.Log(mouseCoords);
+			Vector3 mousePos = Input.mousePosition;
+			mousePos = new Vector3(mousePos.x+mouseOffset, mousePos.y-mouseOffset, mousePos.z);
+			pickedSlotIcon.transform.position = mousePos;
+			//GetSiblingIndex(), SetSiblingIndex(), SetAsFirstSibling(), SetAsLastSibling()
+			// display order is bottom up, items on the bottom will be displayed above everything
+			// so using SetAsLastSibling() will display that piece on top of everything else in
+			// the hierarchy of the current Canvas item
+			pickedSlotIcon.transform.SetAsLastSibling();
 		}
 	} // END Update
 
