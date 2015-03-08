@@ -15,7 +15,7 @@ public class EventManager : MonoBehaviour {
 	protected Vector3 lastPosition;
 	private float moveSpeed = 1f;
 	private float turnSpeed = 1f;
-	protected List<inventory> inventory = new List<inventory>();
+	//protected List<inventory> inventory = new List<inventory>();
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
 	protected int offset = 1000;
@@ -35,7 +35,8 @@ public class EventManager : MonoBehaviour {
 		}
 	}
 	public List<cameraPosRot> cameras = new List<cameraPosRot>();
-	
+	//protected static 
+		
 	// UI elements
 	protected GameObject invBox;
 	protected GameObject invTab;
@@ -85,6 +86,11 @@ public class EventManager : MonoBehaviour {
 		Camera.main.transform.position = cameras[currentRoom].camPos;
 		Camera.main.transform.rotation = Quaternion.Euler(cameras[currentRoom].camRot);
 		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
+
+		//CALL startMenu() in roomSwitcher script
+		//this.GetComponent<roomSwitcher>().startMenu();
+
+
 	} // END Awake
 	
 	protected virtual void Start() {
@@ -359,7 +365,6 @@ public class EventManager : MonoBehaviour {
 	} // END useInventoryItem
 
 	void doNotebook() {
-		print ("in here");
 		GameObject iconObj = GameObject.Find ("notebook");
 		GameObject overlayObj = GameObject.Find ("~notebook");
 

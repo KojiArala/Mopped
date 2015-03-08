@@ -55,23 +55,14 @@ public class slot : EventManager {
 			// left button clicked...
 			if(itemName != "" && !slotPicked) {
 				// move overlay into position
-//				if(itemName[0] == '~') {
-//					GameObject overlay = GameObject.Find (itemName);
-//					if(overlay.transform.position.x < 0) overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, base.guiBottom);
-//					slotPicked = false;
-//				}
-//				else if (!slotPicked) {
-					// use keyword static (see EventManager) with no initial value to make it global and just
-					// one instance otherwise it makes a new instance of the variable with each unique click
-					slotX = this.transform.position.x;
-					slotY = this.transform.position.y;
-					slotZ = this.transform.position.z;
-					slotPicked = true;
-					useItemWith = useWith;
-					iconMoving = true;
-					// attach slot to mouse
-					pickedSlotIcon = GameObject.Find (this.name);
-//				}
+				slotX = this.transform.position.x;
+				slotY = this.transform.position.y;
+				slotZ = this.transform.position.z;
+				slotPicked = true;
+				useItemWith = useWith;
+				iconMoving = true;
+				// attach slot to mouse
+				pickedSlotIcon = GameObject.Find (this.name);
 			}
 
 			else if(iconMoving) {
@@ -105,7 +96,6 @@ public class slot : EventManager {
 
 		if (Input.GetMouseButton (2)) {
 			// middle button clicked
-			Debug.Log("middle click");
 		} // END middle button click IF
 	} // END clicked
 

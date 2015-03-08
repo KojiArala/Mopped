@@ -13,10 +13,12 @@ public class proxObj : EventManager {
 	private Dictionary<string, int> keypadCodes = new Dictionary<string, int>();
 	private Dictionary<string, string> keypads = new Dictionary<string, string>();
 	private Dictionary<string, string> doors = new Dictionary<string, string>();
+	private Dictionary<string, string> actions = new Dictionary<string, string>();
 	private string temp = null;
 	private string nameTemp = null;
 	private int tempCode;
 	private string currentDoor;
+	private string doorAction;
 	private GameObject currentKeypad;
 	private Text txt;
 	private Image[] images;
@@ -46,6 +48,7 @@ public class proxObj : EventManager {
 		addGameObjects();
 		thisCode = -100;
 		currentDoor = null;
+		doorAction = null;
 	} // END Start
 	
 	// Update is called once per frame
@@ -113,6 +116,14 @@ public class proxObj : EventManager {
 							Debug.Log ("ERROR: proxObj keypad code does not exist in dictionary");
 							thisCode = -100;
 						}
+						//action for door
+						if(actions.TryGetValue(thisObject.name, out nameTemp)){
+							doorAction = nameTemp;
+						}
+						else {
+							Debug.Log ("ERROR: proxObj keypad code does not exist in dictionary");
+							thisCode = -100;
+						}
 
 					}
 					else {
@@ -148,22 +159,21 @@ public class proxObj : EventManager {
 
 		//check keypad code entry if keypad code is loaded
 		if (thisCode > 0) {
-			Debug.Log ("Checking code " + thisCode);
-			
 			if(thisCode == int.Parse(tappedCode)) {
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
-				singleDoor.GetComponent<proxDoor>().unlockDoor();
-				base.displayMessage ("Unlocking " + singleDoor.GetComponent<proxDoor>().doorName);
+				singleDoor.GetComponent<proxDoor>().unlockDoor(doorAction);
+				string thisDoorName = singleDoor.GetComponent<proxDoor>().doorName;
+				base.displayMessage ("Opening " + thisDoorName);
 
-				tempObject.transform.position = new Vector2 (-300, tempObject.transform.position.y);
+				tempObject.transform.position = new Vector2 (-606, tempObject.transform.position.y);
 				keypadClosed = true;
 				thisCode = -100;
 				tappedCode = "-42";
 				currentDoor = null;
 				currentKeypad.gameObject.tag = "Untagged";
 				currentKeypad = null;
-				Debug.Log("OPENED " + singleDoor.GetComponent<proxDoor>().doorName);
+				//Debug.Log("OPENED " + singleDoor.GetComponent<proxDoor>().doorName);
 			}
 		} // END keypad code IF
 	} // END Update
@@ -180,16 +190,22 @@ public class proxObj : EventManager {
 		//	name of keypad object in room
 		//	name of keypad panel to move into place
 		keypads.Add ("door_keypad_room1", "room1_keypad");
+		keypads.Add ("cabinet_door", "room1_keypad");
 
 		//keypad codes
-		//	name of keypad object in room
-		//	code to use for the selected keypad
+		//	code used to "open" object
 		keypadCodes.Add ("door_keypad_room1", 9432);
+		keypadCodes.Add ("cabinet_door", 0042);
 
-		//keypad codes
-		//	name of keypad object in room
-		//	code to use for the selected keypad
+		//keypad objects
+		//	name of object in room the keypad "opens"
 		doors.Add ("door_keypad_room1", "door_room1");
+		doors.Add ("cabinet_door", "cabinet_door");
+
+		//keypad objects
+		//	what to do with the object, move or rotate
+		actions.Add ("door_keypad_room1", "open");
+		actions.Add ("cabinet_door", "rotate");
 
 		//room 1 objects
 		//	name of room object
@@ -200,6 +216,7 @@ public class proxObj : EventManager {
 		objects.Add ("bottle", "This is a bottle\n\n\n");
 		objects.Add ("door_room1", "It is a door. It opens.\nSometimes it does not.\nThat is when I see it most.\n");
 		objects.Add ("door_keypad_room1", "Hey look...a keypad\non the wall\n\n");
+		objects.Add ("mop", "My mop. My greatest weapon in the war on filth. It must be retrieved; a stain exists in the next room.");
 		//room 2 objects
 
 	} // END addGameObjects
@@ -238,7 +255,6 @@ public class proxObj : EventManager {
 		}
 		if(!slotFound) {
 			// all slots are full, no more room in inventory
-			Debug.Log("Inventory full, please clear something out before trying to add something new.");
 			base.displayMessage("Inventory full, please clear something out before trying to add something new.");
 		}
 	} // END addToInventory

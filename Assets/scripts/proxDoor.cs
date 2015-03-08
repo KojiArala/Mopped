@@ -7,6 +7,7 @@ public class proxDoor : EventManager {
 	private float delta;
 	private Vector3 thisPos;
 	private bool locked = true;
+	private string action = "";
 	private float proximity = 10f;
 	private bool animating = false;
 	//private bool animateToggle = false;
@@ -34,7 +35,7 @@ public class proxDoor : EventManager {
 			//Debug.Log ("STOOOOOOP!!!");
 			//base.stationary = true;
 			//base.moveTo = base.m2.transform.position;
-			//base.m2.transform.position = Vector3.zero;
+			//base.m2.transform.position = new Vector3(0, m2.transform.position.y, 0);
 		}
 
 		if (delta < proximity && locked == false && !animating) {
@@ -42,30 +43,53 @@ public class proxDoor : EventManager {
 			animating = true;
 			locked = true;
 		}
-
-		if(transform.position.y >= doorMax.y && direction == Vector3.up) {
-			animating = false;
-			this.transform.position = doorMax;
-			direction = Vector3.down;
+		
+		if(action == "open") {
+			if(transform.position.y >= doorMax.y && direction == Vector3.up) {
+				animating = false;
+				this.transform.position = doorMax;
+				direction = Vector3.down;
+			}
+			else if(transform.position.y <= doorMin.y && direction == Vector3.down) {
+				animating = false;
+				this.transform.position = doorMin;
+				direction = Vector3.up;
+			}
+			if(animating) {
+				transform.Translate(direction * doorSpeed * Time.deltaTime);
+			}
 		}
-		else if(transform.position.y <= doorMin.y && direction == Vector3.down) {
-			animating = false;
-			this.transform.position = doorMin;
-			direction = Vector3.up;
+		else if(action == "rotate") {
+			//Debug.Log(transform.rotation);
+			//Debug.Log("x " + transform.rotation.x);
+			//Debug.Log("y " + transform.rotation.y);
+			Debug.Log("z " + transform.rotation.z);
+			//Debug.Log("w " + transform.rotation.w);
+			if(transform.rotation.z > 0.7f) {
+				//transform.Rotate (0, 0, 0.506502f);
+				animating = false;
+			}
+			else if (transform.rotation.z < 0.0506502f){
+				transform.Rotate (0, 0, 0.506502f);
+				animating = false;
+			}
+			if(animating) {
+				Debug.Log("ROTATE");
+				transform.Rotate (0, 0, transform.rotation.z+1);
+			}
 		}
-		else if(animating) {
-			transform.Translate(direction * doorSpeed * Time.deltaTime);
+		else {
+			//Debug.Log ("ERROR: no action listed");
 		}
-		//Debug.Log(transform.position.y + " ~ " + doorMin + " ~ " + doorMax + " ~ " + animating + " ~ " + direction);
 
-	} // end override
+	} // END Update
 
-	public void unlockDoor() {
+	public void unlockDoor(string doorAction) {
 		locked = false;
-	}
+		action = doorAction;
+	} // END unlockDoor
 
-
-}
+} // END class
 
 
 
