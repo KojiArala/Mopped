@@ -10,6 +10,7 @@ public class proxDoor : EventManager {
 	private string action = "";
 	private float proximity = 10f;
 	private bool animating = false;
+	private float zRotate = 1f;
 	//private bool animateToggle = false;
 	private Vector3 direction = Vector3.up;
 	private float doorSpeed = 12f;
@@ -60,22 +61,19 @@ public class proxDoor : EventManager {
 			}
 		}
 		else if(action == "rotate") {
-			//Debug.Log(transform.rotation);
-			//Debug.Log("x " + transform.rotation.x);
-			//Debug.Log("y " + transform.rotation.y);
-			Debug.Log("z " + transform.rotation.z);
-			//Debug.Log("w " + transform.rotation.w);
+			Debug.Log (transform.rotation.z);
+
 			if(transform.rotation.z > 0.7f) {
-				//transform.Rotate (0, 0, 0.506502f);
+				transform.Rotate (0, 0, 0.7f);
 				animating = false;
 			}
-			else if (transform.rotation.z < 0.0506502f){
-				transform.Rotate (0, 0, 0.506502f);
+			else if (transform.rotation.z < 0.5f){
+				transform.Rotate (0, 0, 0.5f);
 				animating = false;
 			}
 			if(animating) {
 				Debug.Log("ROTATE");
-				transform.Rotate (0, 0, transform.rotation.z+1);
+				transform.Rotate (0, 0, transform.rotation.z + zRotate);
 			}
 		}
 		else {
