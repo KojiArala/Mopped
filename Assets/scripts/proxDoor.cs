@@ -61,8 +61,6 @@ public class proxDoor : EventManager {
 			}
 		}
 		else if(action == "rotate") {
-			Debug.Log (transform.rotation.z);
-
 			if(transform.rotation.z > 0.7f) {
 				transform.Rotate (0, 0, 0.7f);
 				animating = false;
@@ -72,7 +70,6 @@ public class proxDoor : EventManager {
 				animating = false;
 			}
 			if(animating) {
-				Debug.Log("ROTATE");
 				transform.Rotate (0, 0, transform.rotation.z + zRotate);
 			}
 		}

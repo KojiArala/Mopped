@@ -10,7 +10,7 @@ public class EventManager : MonoBehaviour {
 	protected GameObject m2;
 	protected Vector3 m2Pos;
 	protected Vector3 m2Rot;
-	protected bool stationary = false;
+	protected bool stationary = true;
 	protected Vector3 moveTo;
 	protected Vector3 lastPosition;
 	private float moveSpeed = 1f;
@@ -110,15 +110,17 @@ public class EventManager : MonoBehaviour {
 		}
 
 		if (!stationary) {
+			Debug.Log ("m2 stationary " + stationary);
 			//smooth rotation not working yet
 			//m2.transform.rotation = Quaternion.Slerp(m2.transform.rotation,Quaternion.LookRotation(m2Rot),Time.deltaTime * turnSpeed);
 
 			//m2.transform.position = Vector3.Lerp(m2Pos, moveTo, Time.deltaTime * moveSpeed);
 			m2.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
 
-			if(Vector3.Distance (m2.transform.position, moveTo) < .2f) {
+			if(Vector3.Distance (m2.transform.position, moveTo) < 2f) {
 				stationary = true;
 				//Debug.Log ("FINAL: " + m2.transform.position + " ~~~ " + moveTo);
+				Debug.Log ("m2 stationary (part2) " + stationary);
 			}
 		}
 	} // END Update

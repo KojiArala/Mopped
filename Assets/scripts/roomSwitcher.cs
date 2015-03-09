@@ -6,22 +6,20 @@ public class roomSwitcher : MonoBehaviour {
 	//enum rooms : int { room0=0, room1=1, room2=2, room3=3, room4=4 };
 	enum rooms { room0, room1, room2, room3, room4 };
 	List<cameras> cameras = new List<cameras>();
-	rooms previousRoom;
+	//rooms previousRoom;
 
 	Dictionary<string, int> roomsData = new Dictionary<string, int>();
 
 	void Start () {
 		roomData ();
 		cameraData ();
-		previousRoom = rooms.room0;
-	}
+		//previousRoom = rooms.room0;
+	} // END Start
 
 	public void startMenu(){
 		Camera.main.transform.position = cameras[0].position;
 		Camera.main.transform.rotation = Quaternion.Euler(cameras[0].rotation);
-		Debug.Log ("here");
-	}
-
+	} // END startMenu
 
 	void OnTriggerEnter(Collider thisObject) {
 		// get string of enum value
@@ -50,15 +48,15 @@ public class roomSwitcher : MonoBehaviour {
 			Debug.Log("ERROR: room data for " + this.name + " not in Dictionary");
 		}
 
-	}
+	} // END OnTriggerEnter
 
 	void OnTriggerStay(Collider thisObject) {
 		//Debug.Log("STAY :)");
-	}
+	} // END OnTriggerStay
 
 	void OnTriggerExit(Collider thisObject) {
 		//Debug.Log("bye-bye birdie");
-	}
+	} // END OnTriggerExit
 
 	void roomData() {
 		roomsData.Add( "room0", 0);
@@ -66,14 +64,14 @@ public class roomSwitcher : MonoBehaviour {
 		roomsData.Add( "room2", 2);
 		roomsData.Add( "room3", 3);
 
-	}
+	} // END roomData
 
 	void cameraData() {
 		cameras.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));
 		cameras.Add( new cameras(new Vector3(-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0) ));
 		cameras.Add( new cameras(new Vector3(50, 4, -1), new Vector3 (0, -40, 0) ));
 
-	}
+	} // END cameraData
 
 
 }

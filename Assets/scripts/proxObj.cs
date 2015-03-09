@@ -88,7 +88,7 @@ public class proxObj : EventManager {
 				}
 			}
 
-			else if (base.stationary && !iconMoving
+			else if (stationary && !iconMoving
 			    				&& (thisObject.tag == "obj" ||
 			                        thisObject.tag == "obj_pickup" ||
 			                        thisObject.tag == "keypad" ||
@@ -133,10 +133,10 @@ public class proxObj : EventManager {
 				} // END check if a keypad IF
 			}
 
-			if(!EventSystem.current.IsPointerOverGameObject()) {//move M2 to clicked position
+			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2") {//move M2 to clicked position
 				//	get vector3 but only use x - z position
 				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
-				base.stationary = false;
+				stationary = false;
 			}
 		} // END left button click IF
 
