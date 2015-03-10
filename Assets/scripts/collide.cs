@@ -20,10 +20,10 @@ public class collide : EventManager {
 		stationary = true;
 		lastPos = m2.transform.position;
 
-		base.moveTo = m2.transform.position;
-		base.lastPosition = m2.transform.position;
+		moveTo = m2.transform.position;
+		lastPosition = m2.transform.position;
 		m2.transform.Translate(new Vector3(0, 0, 0));
-		m2.transform.position = base.moveTo;
+		m2.transform.position = moveTo;
 		Debug.Log ("STOP " + stationary);
 	} // END OnTriggerEnter
 

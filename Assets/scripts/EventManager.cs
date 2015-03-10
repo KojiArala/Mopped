@@ -11,8 +11,8 @@ public class EventManager : MonoBehaviour {
 	protected Vector3 m2Pos;
 	protected Vector3 m2Rot;
 	protected bool stationary = true;
-	protected Vector3 moveTo;
-	protected Vector3 lastPosition;
+	protected static Vector3 moveTo;
+	protected static Vector3 lastPosition;
 	private float moveSpeed = 1f;
 	private float turnSpeed = 1f;
 	//protected List<inventory> inventory = new List<inventory>();
@@ -21,7 +21,8 @@ public class EventManager : MonoBehaviour {
 	protected int offset = 1000;
 	protected int guiBottom = 230;
 	public GameObject messageBox;
-	protected static string pickedObject;
+	protected static object[] pickedObject = {"", "", new Vector3(0, 0, 0)};
+	private float distanceCheck = 3f;
 
 	// camera positions and rotations
 	public static int currentRoom = 1;
@@ -70,8 +71,6 @@ public class EventManager : MonoBehaviour {
 		//Text[] textValue = canvas.GetComponentsInChildren<Text>();
 		//textValue[0].text = "hey";
 
-		pickedObject = "";
-
 		thisCode = -10;
 		tappedCode = "-42";
 		numberTemp = "";
@@ -110,17 +109,22 @@ public class EventManager : MonoBehaviour {
 		}
 
 		if (!stationary) {
-			Debug.Log ("m2 stationary " + stationary);
-			//smooth rotation not working yet
-			//m2.transform.rotation = Quaternion.Slerp(m2.transform.rotation,Quaternion.LookRotation(m2Rot),Time.deltaTime * turnSpeed);
-
-			//m2.transform.position = Vector3.Lerp(m2Pos, moveTo, Time.deltaTime * moveSpeed);
-			m2.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
-
-			if(Vector3.Distance (m2.transform.position, moveTo) < 2f) {
+			Debug.Log (pickedObject[0] + " ~ " + pickedObject[1] + " ~ " + pickedObject[2]);
+			if((string) pickedObject[1] == "obj_pickup_inside") distanceCheck = 5f;
+			else distanceCheck = 3f;
+			float distance = Vector3.Distance (m2.transform.position, moveTo);
+			//Debug.Log (distance);
+			if(distance < distanceCheck) {
 				stationary = true;
-				//Debug.Log ("FINAL: " + m2.transform.position + " ~~~ " + moveTo);
-				Debug.Log ("m2 stationary (part2) " + stationary);
+				//Debug.Log ("m2 stationary (part2) " + stationary);
+			}
+			else {
+				//Debug.Log ("m2 stationary " + stationary);
+				//smooth rotation not working yet
+				//m2.transform.rotation = Quaternion.Slerp(m2.transform.rotation,Quaternion.LookRotation(m2Rot),Time.deltaTime * turnSpeed);
+				
+				//m2.transform.position = Vector3.Lerp(m2Pos, moveTo, Time.deltaTime * moveSpeed);
+				m2.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
 			}
 		}
 	} // END Update

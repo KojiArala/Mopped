@@ -87,13 +87,18 @@ public class proxObj : EventManager {
 					dontUseItem(thisObject.name);
 				}
 			}
-
 			else if (stationary && !iconMoving
 			    				&& (thisObject.tag == "obj" ||
 			                        thisObject.tag == "obj_pickup" ||
+			    					thisObject.tag == "obj_pickup_inside" ||
 			                        thisObject.tag == "keypad" ||
 			                        thisObject.tag == "floor")
 			    				&& !EventSystem.current.IsPointerOverGameObject()) {
+
+				pickedObject[0] = thisObject.name;
+				pickedObject[1] = thisObject.tag;
+				pickedObject[2] = thisObject.transform.position; //.ToString("F4");
+
 				if(thisObject.tag == "keypad" && keypadClosed){
 					//Debug.Log (thisObject.name);
 					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
@@ -135,7 +140,7 @@ public class proxObj : EventManager {
 
 			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2") {//move M2 to clicked position
 				//	get vector3 but only use x - z position
-				base.moveTo = new Vector3(hit.point.x, base.lastPosition.y, hit.point.z);
+				moveTo = new Vector3(hit.point.x, lastPosition.y, hit.point.z);
 				stationary = false;
 			}
 		} // END left button click IF
@@ -180,7 +185,7 @@ public class proxObj : EventManager {
 
 	void OnMouseDown () {
 		// only for left click
-		if(this.tag == "obj_pickup") {
+		if(this.tag == "obj_pickup" || this.tag == "obj_pickup_inside") {
 			if(!slotPicked) addToInventory();
 		}
 	} // END OnMouseDown
