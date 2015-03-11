@@ -21,6 +21,7 @@ public class EventManager : MonoBehaviour {
 	protected int offset = 1000;
 	protected int guiBottom = 230;
 	public GameObject messageBox;
+	public GameObject hoverTextBox;
 	protected static object[] pickedObject = {"", "", new Vector3(0, 0, 0)};
 	private float distanceCheck = 3f;
 
@@ -60,6 +61,7 @@ public class EventManager : MonoBehaviour {
 	void Awake () {
 		m2 = GameObject.Find("m2");
 		messageBox = GameObject.Find("message");
+		hoverTextBox = GameObject.Find ("hoverText");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
 		addRoomCameras();
@@ -70,6 +72,10 @@ public class EventManager : MonoBehaviour {
 		//GameObject canvas = GameObject.Find("Canvas");
 		//Text[] textValue = canvas.GetComponentsInChildren<Text>();
 		//textValue[0].text = "hey";
+
+		Text hoverString = hoverTextBox.GetComponent<Text>();
+		hoverString.text = "";
+		hoverTextBox.transform.position = new Vector3 (0, -50, 0);
 
 		thisCode = -10;
 		tappedCode = "-42";
@@ -109,7 +115,7 @@ public class EventManager : MonoBehaviour {
 		}
 
 		if (!stationary) {
-			Debug.Log (pickedObject[0] + " ~ " + pickedObject[1] + " ~ " + pickedObject[2]);
+			//Debug.Log (pickedObject[0] + " ~ " + pickedObject[1] + " ~ " + pickedObject[2]);
 			if((string) pickedObject[1] == "obj_pickup_inside") distanceCheck = 5f;
 			else distanceCheck = 3f;
 			float distance = Vector3.Distance (m2.transform.position, moveTo);

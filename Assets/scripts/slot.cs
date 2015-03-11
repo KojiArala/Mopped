@@ -52,6 +52,8 @@ public class slot : EventManager {
 	// Uses the item
 	public void clicked() {
 		if (Input.GetMouseButton (0)) {
+			hoverTextBox.transform.position = new Vector3 (0, -50, 0);
+
 			// left button clicked...
 			if(itemName != "" && !slotPicked) {
 				// move overlay into position
@@ -98,5 +100,30 @@ public class slot : EventManager {
 			// middle button clicked
 		} // END middle button click IF
 	} // END clicked
+
+	public void OnMouseOver() {
+		//Debug.Log (Input.mousePosition + " ~ " + ray);
+		if(this.name != "slot") {
+			string nameText = this.itemName;
+			try {
+				if(nameText != "" && nameText[0] == '~') nameText = nameText.Substring(1);
+			}
+			catch(System.Exception e) {
+				string errorString = e.ToString();
+			}
+				
+			Text hoverString = hoverTextBox.GetComponent<Text>();
+			hoverString.text = nameText;
+
+			Vector3 objPosition = new Vector3(this.transform.position.x + 30, this.transform.position.y + 40, this.transform.position.z);
+			hoverTextBox.transform.position = objPosition;
+		}
+	}
+	
+	public void OnMouseExit() {
+		Text hoverString = hoverTextBox.GetComponent<Text>();
+		hoverString.text = "";
+		hoverTextBox.transform.position = new Vector3 (0, -50, 0);
+	}
 
 } // END class

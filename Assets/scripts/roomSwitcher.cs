@@ -37,16 +37,19 @@ public class roomSwitcher : MonoBehaviour {
 //			Debug.Log(thisOne);
 //		}
 
-		int tempCode;
-		//if(roomsData.ContainsKey(this.name)) {
-		//if(roomsData.ContainsValue(300)) {
-		if(roomsData.TryGetValue(this.name, out tempCode)){
-			Camera.main.transform.position = cameras[tempCode].position;
-			Camera.main.transform.rotation = Quaternion.Euler(cameras[tempCode].rotation);
+		if(thisObject.name == "m2") {
+			int tempCode;
+			//if(roomsData.ContainsKey(this.name)) {
+			//if(roomsData.ContainsValue(300)) {
+			if(roomsData.TryGetValue(this.name, out tempCode)){
+				Camera.main.transform.position = cameras[tempCode].position;
+				Camera.main.transform.rotation = Quaternion.Euler(cameras[tempCode].rotation);
+			}
+			else {
+				Debug.Log("ERROR: room data for " + this.name + " not in Dictionary");
+			}
 		}
-		else {
-			Debug.Log("ERROR: room data for " + this.name + " not in Dictionary");
-		}
+		
 
 	} // END OnTriggerEnter
 

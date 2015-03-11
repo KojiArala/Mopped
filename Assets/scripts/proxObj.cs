@@ -77,6 +77,8 @@ public class proxObj : EventManager {
 		}
 
 		if (Input.GetMouseButton (0)) {
+			hoverTextBox.transform.position = new Vector3 (0, -50, 0);
+
 			// left button clicked;
 			if(slotPicked && !EventSystem.current.IsPointerOverGameObject()) {
 				// something picked up so check if usable in world space
@@ -138,7 +140,7 @@ public class proxObj : EventManager {
 				} // END check if a keypad IF
 			}
 
-			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2") {//move M2 to clicked position
+			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2") { //move M2 to clicked position
 				//	get vector3 but only use x - z position
 				moveTo = new Vector3(hit.point.x, lastPosition.y, hit.point.z);
 				stationary = false;
@@ -190,7 +192,40 @@ public class proxObj : EventManager {
 		}
 	} // END OnMouseDown
 
-	void addGameObjects (){
+	public void OnMouseOver() {
+		//Debug.Log (Input.mousePosition + " ~ " + ray);
+
+		try {
+			if(thisObject.tag == "obj_pickup" || thisObject.tag == "obj_pickup_inside") {
+				string nameText = thisObject.GetComponent<proxObj>().itemName;
+				try {
+					if(nameText != "" && nameText[0] == '~') nameText = nameText.Substring(1);
+				}
+				catch(System.Exception e) {
+					string errorString = e.ToString();
+				}
+
+				Text hoverString = hoverTextBox.GetComponent<Text>();
+				hoverString.text = nameText;
+				//hoverString.text = thisObject.name;
+
+	//			Vector3 objPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, thisObject.transform.position);
+	//			hoverTextBox.transform.position = objPosition;
+				hoverTextBox.transform.position = new Vector3(Input.mousePosition.x + 40, Input.mousePosition.y + 20, Input.mousePosition.z);
+			}
+		}
+		catch(System.Exception e) {
+			string errorString = e.ToString();
+		}
+	}
+
+	void OnMouseExit() {
+		Text hoverString = hoverTextBox.GetComponent<Text>();
+		hoverString.text = "";
+		hoverTextBox.transform.position = new Vector3 (0, -50, 0);
+	}
+
+	void addGameObjects () {
 		//keypads
 		//	name of keypad object in room
 		//	name of keypad panel to move into place
@@ -226,7 +261,7 @@ public class proxObj : EventManager {
 
 	} // END addGameObjects
 
-	void addToInventory(){
+	void addToInventory() {
 		bool slotFound = false;
 		buttons = base.invBox.GetComponentsInChildren<Button>();
 		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
@@ -264,7 +299,7 @@ public class proxObj : EventManager {
 		}
 	} // END addToInventory
 
-	void clearEmptySlots(){
+	void clearEmptySlots() {
 		buttons = base.invBox.GetComponentsInChildren<Button>();
 		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
 			if(thisOne.GetComponent<slot>().slotEmpty) {
