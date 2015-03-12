@@ -13,7 +13,7 @@ public class proxDoor : EventManager {
 	private float zRotate = 1f;
 	//private bool animateToggle = false;
 	private Vector3 direction = Vector3.up;
-	private float doorSpeed = 12f;
+	private float doorSpeed = 8f;
 	private Vector3 doorMin;
 	private Vector3 doorMax;
 	public string doorName;
@@ -82,6 +82,14 @@ public class proxDoor : EventManager {
 	public void unlockDoor(string doorAction) {
 		locked = false;
 		action = doorAction;
+
+		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		if(doorAction == "open") audioSource.clip = doorOpenSound;
+		else audioSource.clip = lockerOpen;
+		audioSource.loop = false;
+		audioSource.volume = 1.0f;
+		if(!audioSource.isPlaying) audioSource.Stop();
+		audioSource.Play();
 	} // END unlockDoor
 
 } // END class

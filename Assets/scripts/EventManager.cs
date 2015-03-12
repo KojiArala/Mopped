@@ -24,6 +24,7 @@ public class EventManager : MonoBehaviour {
 	public GameObject hoverTextBox;
 	protected static object[] pickedObject = {"", "", new Vector3(0, 0, 0)};
 	private float distanceCheck = 3f;
+	protected static string doorAction = "";
 
 	// camera positions and rotations
 	public static int currentRoom = 1;
@@ -58,7 +59,19 @@ public class EventManager : MonoBehaviour {
 	public static string numberTemp;
 	public static bool keypadClosed = true;
 
+	// sounds
+	// variable to hold the audio source that plays
+	protected static AudioSource audioSource;
+	protected static AudioSource keyAudioSource;
+	// Sound files
+	protected static AudioClip keypadSound;
+	protected static AudioClip doorOpenSound;
+	protected static AudioClip doorCloseSound;
+	protected static AudioClip lockerOpen;
+	protected static AudioClip scribble;
+
 	void Awake () {
+		loadSounds();
 		m2 = GameObject.Find("m2");
 		messageBox = GameObject.Find("message");
 		hoverTextBox = GameObject.Find ("hoverText");
@@ -334,6 +347,26 @@ public class EventManager : MonoBehaviour {
 //		*/
 //	} // END OnGUI
 
+	void loadSounds() {
+//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
+		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
+		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
+		lockerOpen = (AudioClip)Resources.Load ("Sounds/LockerOpen");
+		scribble = (AudioClip)Resources.Load ("Sounds/Scribble");
+
+		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		audioSource.clip = scribble;
+		audioSource.loop = false;
+		audioSource.volume = 1.0f;
+
+		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keyAudioSource.clip = keypadSound;
+		keyAudioSource.loop = false;
+		keyAudioSource.volume = 1.0f;
+	}
+	
 	void addRoomCameras() {
 		// room 0, start menu screen?
 		cameras.Add (new cameraPosRot (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0)));
@@ -385,8 +418,11 @@ public class EventManager : MonoBehaviour {
 		st.highlightedSprite = iconObj.GetComponent<slot>().spriteNorm2;
 		st.pressedSprite = iconObj.GetComponent<slot>().spriteNorm2;
 		iconObj.GetComponent<Button>().spriteState = st;
-
 		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
+
+		// not playing because method ends too quick...need to play outside or pause method until it's finished playing
+		audioSource.Play();
+		//audioSource.PlayOneShot(scribble, 1.0f);
 	}
 
 } // END class
