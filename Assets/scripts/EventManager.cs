@@ -63,12 +63,15 @@ public class EventManager : MonoBehaviour {
 	// variable to hold the audio source that plays
 	protected static AudioSource audioSource;
 	protected static AudioSource keyAudioSource;
+	protected static AudioSource m2MoveSound;
 	// Sound files
 	protected static AudioClip keypadSound;
 	protected static AudioClip doorOpenSound;
 	protected static AudioClip doorCloseSound;
 	protected static AudioClip lockerOpen;
 	protected static AudioClip scribble;
+	protected static AudioClip m2Move;
+	protected static AudioClip m2Stop;
 
 	void Awake () {
 		loadSounds();
@@ -135,6 +138,11 @@ public class EventManager : MonoBehaviour {
 			//Debug.Log (distance);
 			if(distance < distanceCheck) {
 				stationary = true;
+				m2MoveSound.clip = m2Stop;
+				m2MoveSound.loop = false;
+				m2MoveSound.volume = 1.0f;
+				if(m2MoveSound.isPlaying) m2MoveSound.Stop();
+				m2MoveSound.Play ();
 				//Debug.Log ("m2 stationary (part2) " + stationary);
 			}
 			else {
@@ -144,10 +152,43 @@ public class EventManager : MonoBehaviour {
 				
 				//m2.transform.position = Vector3.Lerp(m2Pos, moveTo, Time.deltaTime * moveSpeed);
 				m2.transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed);
+				if(!m2MoveSound.isPlaying) {
+					m2MoveSound.clip = m2Move;
+					m2MoveSound.loop = true;
+					m2MoveSound.volume = 1.0f;
+					m2MoveSound.Play();
+				}
 			}
 		}
 	} // END Update
 
+	void loadSounds() {
+		//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
+		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
+		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
+		lockerOpen = (AudioClip)Resources.Load ("Sounds/LockerOpen");
+		scribble = (AudioClip)Resources.Load ("Sounds/Scribble");
+		m2Move = (AudioClip)Resources.Load ("Sounds/M2MoveOnly");
+		m2Stop = (AudioClip)Resources.Load ("Sounds/M2MoveStop");
+
+		m2MoveSound = (AudioSource)gameObject.AddComponent("AudioSource");
+		m2MoveSound.clip = m2Move;
+		m2MoveSound.loop = true;
+		m2MoveSound.volume = 1.0f;
+
+		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		audioSource.clip = scribble;
+		audioSource.loop = false;
+		audioSource.volume = 1.0f;
+		
+		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keyAudioSource.clip = keypadSound;
+		keyAudioSource.loop = false;
+		keyAudioSource.volume = 1.0f;
+	}
+	
 	protected Vector3 getM2Pos(){
 		return m2Pos;
 	} // END getM2Pos
@@ -347,26 +388,6 @@ public class EventManager : MonoBehaviour {
 //		*/
 //	} // END OnGUI
 
-	void loadSounds() {
-//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
-		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
-		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
-		lockerOpen = (AudioClip)Resources.Load ("Sounds/LockerOpen");
-		scribble = (AudioClip)Resources.Load ("Sounds/Scribble");
-
-		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		audioSource.clip = scribble;
-		audioSource.loop = false;
-		audioSource.volume = 1.0f;
-
-		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		keyAudioSource.clip = keypadSound;
-		keyAudioSource.loop = false;
-		keyAudioSource.volume = 1.0f;
-	}
-	
 	void addRoomCameras() {
 		// room 0, start menu screen?
 		cameras.Add (new cameraPosRot (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0)));
@@ -421,6 +442,9 @@ public class EventManager : MonoBehaviour {
 		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
 
 		// not playing because method ends too quick...need to play outside or pause method until it's finished playing
+		audioSource.clip = scribble;
+		audioSource.loop = false;
+		audioSource.volume = 1.0f;
 		audioSource.Play();
 		//audioSource.PlayOneShot(scribble, 1.0f);
 	}

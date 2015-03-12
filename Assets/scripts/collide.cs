@@ -24,7 +24,7 @@ public class collide : EventManager {
 		lastPosition = m2.transform.position;
 		m2.transform.Translate(new Vector3(0, 0, 0));
 		m2.transform.position = moveTo;
-		Debug.Log ("STOP " + stationary);
+		//Debug.Log ("STOP " + stationary);
 	} // END OnTriggerEnter
 
 	void OnTriggerStay(Collider thisObject) {
