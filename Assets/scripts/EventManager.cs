@@ -72,8 +72,10 @@ public class EventManager : MonoBehaviour {
 	protected static AudioClip scribble;
 	protected static AudioClip m2Move;
 	protected static AudioClip m2Stop;
+	protected static AudioClip inventoryToggle;
+	protected static AudioClip quitSound;
 
-	void Awake () {
+	void Awake() {
 		loadSounds();
 		m2 = GameObject.Find("m2");
 		messageBox = GameObject.Find("message");
@@ -119,7 +121,7 @@ public class EventManager : MonoBehaviour {
 		//textBoxMe.SetActive(false);	// uncomment to hide by default
 	} // END Start
 
-	protected virtual void Update () {
+	protected virtual void Update() {
 		m2Pos = m2.transform.position;
 		if (lastPosition != moveTo) {
 			m2.transform.Translate(new Vector3(0,0,0));
@@ -140,9 +142,8 @@ public class EventManager : MonoBehaviour {
 				stationary = true;
 				m2MoveSound.clip = m2Stop;
 				m2MoveSound.loop = false;
-				m2MoveSound.volume = 1.0f;
 				if(m2MoveSound.isPlaying) m2MoveSound.Stop();
-				m2MoveSound.Play ();
+				m2MoveSound.Play();
 				//Debug.Log ("m2 stationary (part2) " + stationary);
 			}
 			else {
@@ -155,7 +156,6 @@ public class EventManager : MonoBehaviour {
 				if(!m2MoveSound.isPlaying) {
 					m2MoveSound.clip = m2Move;
 					m2MoveSound.loop = true;
-					m2MoveSound.volume = 1.0f;
 					m2MoveSound.Play();
 				}
 			}
@@ -172,6 +172,8 @@ public class EventManager : MonoBehaviour {
 		scribble = (AudioClip)Resources.Load ("Sounds/Scribble");
 		m2Move = (AudioClip)Resources.Load ("Sounds/M2MoveOnly");
 		m2Stop = (AudioClip)Resources.Load ("Sounds/M2MoveStop");
+		inventoryToggle = (AudioClip)Resources.Load ("Sounds/Button2");
+		quitSound = (AudioClip)Resources.Load ("Sounds/Exit");
 
 		m2MoveSound = (AudioSource)gameObject.AddComponent("AudioSource");
 		m2MoveSound.clip = m2Move;
@@ -179,14 +181,9 @@ public class EventManager : MonoBehaviour {
 		m2MoveSound.volume = 1.0f;
 
 		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		audioSource.clip = scribble;
+		//audioSource.clip = scribble;
 		audioSource.loop = false;
 		audioSource.volume = 1.0f;
-		
-		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		keyAudioSource.clip = keypadSound;
-		keyAudioSource.loop = false;
-		keyAudioSource.volume = 1.0f;
 	}
 	
 	protected Vector3 getM2Pos(){
@@ -212,7 +209,6 @@ public class EventManager : MonoBehaviour {
 	protected void useItem(bool useItem) {
 		// can use item with clicked world object so do it here
 		if(useItem) useInventoryItem();
-		
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 		pickedSlotIcon.name = "slot";
 		pickedSlotIcon.GetComponent<slot>().itemName = "";
@@ -409,10 +405,10 @@ public class EventManager : MonoBehaviour {
 		invBox = GameObject.Find ("inventory");
 		emptySlot = GameObject.Find ("emptySlot");
 		tempSwapSlot = GameObject.Find ("tempSwapSlot");
-
 	} // END getUIElements
 
 	void useInventoryItem() {
+		Debug.Log (useItemWith);
 		// useItemWith is name of picked object so switch/case statement to handle what to do
 		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Remove(0,1);
@@ -426,8 +422,6 @@ public class EventManager : MonoBehaviour {
 			//print("Incorrect intelligence level.");
 			break;
 		}
-
-		
 	} // END useInventoryItem
 
 	void doNotebook() {
@@ -441,11 +435,9 @@ public class EventManager : MonoBehaviour {
 		iconObj.GetComponent<Button>().spriteState = st;
 		overlayObj.GetComponent<Image>().sprite = iconObj.GetComponent<slot>().overlayNorm2;
 
-		// not playing because method ends too quick...need to play outside or pause method until it's finished playing
 		audioSource.clip = scribble;
-		audioSource.loop = false;
-		audioSource.volume = 1.0f;
 		audioSource.Play();
+		useItemWith = "";
 		//audioSource.PlayOneShot(scribble, 1.0f);
 	}
 

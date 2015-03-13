@@ -23,9 +23,9 @@ public class slot : EventManager {
 	private GameObject thisInnerObject;
 	private int mouseOffset = 27;
 
-	protected override void Start () {
+	protected override void Start() {
 		// protected or public to use override (child), call base.Start() to cascade them
-		base.Start ();
+		base.Start();
 		slotEmpty = true;
 		iconMoving = false;
 	}
@@ -34,8 +34,8 @@ public class slot : EventManager {
 //		Debug.Log("Right-click "+gameObject.name);
 //	}
 
-	protected override void Update () {
-		base.Update ();
+	protected override void Update() {
+		base.Update();
 
 		if(slotPicked) {
 			Vector3 mousePos = Input.mousePosition;

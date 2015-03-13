@@ -18,17 +18,17 @@ public class proxDoor : EventManager {
 	private Vector3 doorMax;
 	public string doorName;
 
-	protected override void Start () {
+	protected override void Start() {
 		// protected or public to use override (child), call base.Start() to cascade them
-		base.Start ();
+		base.Start();
 		thisPos = this.transform.position;
 		doorMin = new Vector3 (thisPos.x, 3, thisPos.z);
 		doorMax = new Vector3 (thisPos.x, 15, thisPos.z);
 	}
 
 	// Update is called once per frame
-	protected override void Update () {
-		base.Update ();
+	protected override void Update() {
+		base.Update();
 		// if statement to do check only if object is visible in camera
 		delta = Vector3.Distance (m2Pos, thisPos);
 		if(delta < 7.5f) {
@@ -83,12 +83,9 @@ public class proxDoor : EventManager {
 		locked = false;
 		action = doorAction;
 
-		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
 		if(doorAction == "open") audioSource.clip = doorOpenSound;
 		else audioSource.clip = lockerOpen;
-		audioSource.loop = false;
-		audioSource.volume = 1.0f;
-		if(!audioSource.isPlaying) audioSource.Stop();
+		//if(!audioSource.isPlaying) audioSource.Stop();
 		audioSource.Play();
 	} // END unlockDoor
 

@@ -41,9 +41,9 @@ public class proxObj : EventManager {
 
 	public int maxSize; // The max amount of times the item can stack
 
-	protected override void Start () {
+	protected override void Start() {
 		// protected or public to use override (child), call base.Start() to cascade them
-		base.Start ();
+		base.Start();
 		thisPos = this.transform.position;
 		addGameObjects();
 		thisCode = -100;
@@ -52,8 +52,8 @@ public class proxObj : EventManager {
 	} // END Start
 	
 	// Update is called once per frame
-	protected override void Update () {
-		base.Update ();
+	protected override void Update() {
+		base.Update();
 		// if statement to do check only if object is visible in camera
 		delta = Vector3.Distance (m2Pos, thisPos);
 
@@ -185,7 +185,7 @@ public class proxObj : EventManager {
 		} // END keypad code IF
 	} // END Update
 
-	void OnMouseDown () {
+	void OnMouseDown() {
 		// only for left click
 		if(this.tag == "obj_pickup" || this.tag == "obj_pickup_inside") {
 			if(!slotPicked) addToInventory();
@@ -225,7 +225,7 @@ public class proxObj : EventManager {
 		hoverTextBox.transform.position = new Vector3 (0, -50, 0);
 	}
 
-	void addGameObjects () {
+	void addGameObjects() {
 		//keypads
 		//	name of keypad object in room
 		//	name of keypad panel to move into place

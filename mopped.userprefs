@@ -1,14 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\hideOverlay.cs">
     <Files>
-      <File FileName="Assets\scripts\EventManager.cs" Line="448" Column="19" />
-      <File FileName="Assets\scripts\proxObj.cs" Line="26" Column="32" />
-      <File FileName="Assets\scripts\slot.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\EventManager.cs" Line="437" Column="1" />
+      <File FileName="Assets\scripts\proxObj.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\slot.cs" Line="45" Column="14" />
       <File FileName="Assets\scripts\keypadNumberClick.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\hideOverlay.cs" Line="22" Column="1" />
+      <File FileName="Assets\scripts\toggleInventory.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\quit.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\proxDoor.cs" Line="1" Column="1" />
-      <File FileName="Assets\scripts\toggleInventory.cs" Line="11" Column="1" />
-      <File FileName="Assets\scripts\hideOverlay.cs" Line="6" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

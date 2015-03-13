@@ -5,7 +5,10 @@ using UnityEngine.EventSystems;
 public class hideOverlay : EventManager {
 	public void hideMe() {
 		string tempObjName = this.name;
-		if(tempObjName != "" && tempObjName[0] == '~') tempObjName = tempObjName.Substring(1);
+
+		if(tempObjName != "" && tempObjName[0] == '~'){
+			tempObjName = tempObjName.Substring(1);
+		}
 
 		if(!slotPicked) this.transform.position = new Vector2 (this.transform.position.x - base.offset, this.transform.position.y);
 		if(tempObjName == useItemWith) {
@@ -17,8 +20,7 @@ public class hideOverlay : EventManager {
 		this.transform.position = new Vector2 (this.transform.position.x + base.offset, this.transform.position.y);
 	}
 
-
-//	void OnMouseDown () {
+//	void OnMouseDown() {
 //		// only for left click
 //	}
 
