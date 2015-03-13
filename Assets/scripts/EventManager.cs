@@ -64,6 +64,7 @@ public class EventManager : MonoBehaviour {
 	protected static AudioSource audioSource;
 	protected static AudioSource keyAudioSource;
 	protected static AudioSource m2MoveSound;
+	protected static AudioSource objAudioSource;
 	// Sound files
 	protected static AudioClip keypadSound;
 	protected static AudioClip doorOpenSound;
@@ -74,6 +75,9 @@ public class EventManager : MonoBehaviour {
 	protected static AudioClip m2Stop;
 	protected static AudioClip inventoryToggle;
 	protected static AudioClip quitSound;
+	protected static AudioClip objWet;
+	protected static AudioClip objMetalic;
+	protected static AudioClip objPlastic;
 
 	void Awake() {
 		loadSounds();
@@ -174,14 +178,19 @@ public class EventManager : MonoBehaviour {
 		m2Stop = (AudioClip)Resources.Load ("Sounds/M2MoveStop");
 		inventoryToggle = (AudioClip)Resources.Load ("Sounds/Button2");
 		quitSound = (AudioClip)Resources.Load ("Sounds/Exit");
+		objWet = (AudioClip)Resources.Load ("Sounds/WetPickup");
+		objMetalic = (AudioClip)Resources.Load ("Sounds/MetalPickup");
+		objPlastic = (AudioClip)Resources.Load ("Sounds/PlasticPickup");
 
 		m2MoveSound = (AudioSource)gameObject.AddComponent("AudioSource");
-		m2MoveSound.clip = m2Move;
 		m2MoveSound.loop = true;
 		m2MoveSound.volume = 1.0f;
 
+		objAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		objAudioSource.loop = false;
+		objAudioSource.volume = 1.0f;
+
 		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		//audioSource.clip = scribble;
 		audioSource.loop = false;
 		audioSource.volume = 1.0f;
 	}
@@ -214,6 +223,7 @@ public class EventManager : MonoBehaviour {
 		pickedSlotIcon.GetComponent<slot>().itemName = "";
 		pickedSlotIcon.GetComponent<slot>().itemDescription = "";
 		pickedSlotIcon.GetComponent<slot>().useWith = "";
+		pickedSlotIcon.GetComponent<slot>().soundType = "";
 		pickedSlotIcon.GetComponent<slot>().slotEmpty = true;
 
 		pickedSlotIcon.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;
@@ -267,6 +277,7 @@ public class EventManager : MonoBehaviour {
 		tempSwapSlot.GetComponent<slot>().itemName = pickedSlotIcon.GetComponent<slot>().itemName;
 		tempSwapSlot.GetComponent<slot>().itemDescription = pickedSlotIcon.GetComponent<slot>().itemDescription;
 		tempSwapSlot.GetComponent<slot>().useWith = pickedSlotIcon.GetComponent<slot>().useWith;
+		tempSwapSlot.GetComponent<slot>().soundType = pickedSlotIcon.GetComponent<slot>().soundType;
 		tempSwapSlot.GetComponent<slot>().slotEmpty = pickedSlotIcon.GetComponent<slot>().slotEmpty;
 		
 		tempSwapSlot.GetComponent<slot>().spriteNorm = pickedSlotIcon.GetComponent<slot>().spriteNorm;
@@ -291,6 +302,7 @@ public class EventManager : MonoBehaviour {
 		pickedSlotIcon.GetComponent<slot>().itemName = thisSlot.itemName;
 		pickedSlotIcon.GetComponent<slot>().itemDescription = thisSlot.itemDescription;
 		pickedSlotIcon.GetComponent<slot>().useWith = thisSlot.useWith;
+		pickedSlotIcon.GetComponent<slot>().soundType = thisSlot.soundType;
 		pickedSlotIcon.GetComponent<slot>().slotEmpty = thisSlot.slotEmpty;
 		
 		pickedSlotIcon.GetComponent<slot>().spriteNorm = thisSlot.spriteNorm;
@@ -314,6 +326,7 @@ public class EventManager : MonoBehaviour {
 		thisSlot.itemName = tempSwapSlot.GetComponent<slot>().itemName;
 		thisSlot.itemDescription = tempSwapSlot.GetComponent<slot>().itemDescription;
 		thisSlot.useWith = tempSwapSlot.GetComponent<slot>().useWith;
+		thisSlot.soundType = tempSwapSlot.GetComponent<slot>().soundType;
 		thisSlot.slotEmpty = tempSwapSlot.GetComponent<slot>().slotEmpty;
 		
 		thisSlot.spriteNorm = tempSwapSlot.GetComponent<slot>().spriteNorm;
@@ -334,6 +347,7 @@ public class EventManager : MonoBehaviour {
 		tempSwapSlot.GetComponent<slot>().itemName = null;
 		tempSwapSlot.GetComponent<slot>().itemDescription = null;
 		tempSwapSlot.GetComponent<slot>().useWith = null;
+		tempSwapSlot.GetComponent<slot>().soundType = null;
 		tempSwapSlot.GetComponent<slot>().slotEmpty = true;
 		
 		tempSwapSlot.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;

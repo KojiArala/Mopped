@@ -7,6 +7,7 @@ public class slot : EventManager {
 	public string itemName;
 	public string itemDescription;
 	public string useWith;
+	public string soundType;
 	public bool slotEmpty;
 	//public int maxSize; // The max amount of times the item can stack
 

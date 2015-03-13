@@ -29,6 +29,7 @@ public class proxObj : EventManager {
 	public string itemName;
 	public string itemDescription;
 	public string useWith;
+	public string soundType;
 
 	// sprites for the button, normal
 	public Sprite spriteNorm;
@@ -266,12 +267,15 @@ public class proxObj : EventManager {
 		buttons = base.invBox.GetComponentsInChildren<Button>();
 		foreach (Button thisOne in buttons) { // Loop through each button inside the inventory "box"
 			if(thisOne.GetComponent<slot>().slotEmpty && !slotFound) {
+				playPickupSound(thisObject.GetComponent<proxObj>().soundType);
 				string tempNameString = thisObject.GetComponent<proxObj>().itemName;
 				if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
 				thisOne.name = tempNameString;
 				thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
 				thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
 				thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
+				thisOne.GetComponent<slot>().soundType = thisObject.GetComponent<proxObj>().soundType;
+
 				thisOne.GetComponent<slot>().slotEmpty = false;
 
 				thisOne.GetComponent<slot>().spriteNorm = thisObject.GetComponent<proxObj>().spriteNorm;
@@ -298,6 +302,22 @@ public class proxObj : EventManager {
 			base.displayMessage("Inventory full, please clear something out before trying to add something new.");
 		}
 	} // END addToInventory
+
+	void playPickupSound(string thisType) {
+		switch (thisType) {
+		case "wet":
+			objAudioSource.clip = objWet;
+			break;
+		case "metal":
+			objAudioSource.clip = objMetalic;
+			break;
+		case "plastic":
+		default:
+			objAudioSource.clip = objPlastic;
+			break;
+		}
+		objAudioSource.Play();
+	}
 
 	void clearEmptySlots() {
 		buttons = base.invBox.GetComponentsInChildren<Button>();
