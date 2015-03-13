@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class slot : EventManager {
 	public string itemName;
-	public string itemDescription;
+	public string DescriptionGame;
+	public string DescriptionInventory;
 	public string useWith;
 	public string soundType;
 	public bool slotEmpty;
@@ -92,8 +93,8 @@ public class slot : EventManager {
 				if(overlay.transform.position.x < 0) overlay.transform.position = new Vector2 (overlay.transform.position.x + base.offset, base.guiBottom);
 				//slotPicked = false;
 			}
-			else if(itemDescription != "") {
-				base.displayMessage(itemDescription);
+			else if(DescriptionGame != "") {
+				base.displayMessage(DescriptionGame);
 			}
 		} // END right button click IF
 

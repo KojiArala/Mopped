@@ -62,7 +62,6 @@ public class EventManager : MonoBehaviour {
 	// sounds
 	// variable to hold the audio source that plays
 	protected static AudioSource audioSource;
-	protected static AudioSource keyAudioSource;
 	protected static AudioSource m2MoveSound;
 	protected static AudioSource objAudioSource;
 	// Sound files
@@ -168,7 +167,6 @@ public class EventManager : MonoBehaviour {
 
 	void loadSounds() {
 		//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
-		keyAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
 		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
 		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
 		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
@@ -221,7 +219,7 @@ public class EventManager : MonoBehaviour {
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 		pickedSlotIcon.name = "slot";
 		pickedSlotIcon.GetComponent<slot>().itemName = "";
-		pickedSlotIcon.GetComponent<slot>().itemDescription = "";
+		pickedSlotIcon.GetComponent<slot>().DescriptionGame = "";
 		pickedSlotIcon.GetComponent<slot>().useWith = "";
 		pickedSlotIcon.GetComponent<slot>().soundType = "";
 		pickedSlotIcon.GetComponent<slot>().slotEmpty = true;
@@ -275,7 +273,8 @@ public class EventManager : MonoBehaviour {
 		//tempNameString = thisSlot.itemName;
 		//if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
 		tempSwapSlot.GetComponent<slot>().itemName = pickedSlotIcon.GetComponent<slot>().itemName;
-		tempSwapSlot.GetComponent<slot>().itemDescription = pickedSlotIcon.GetComponent<slot>().itemDescription;
+		tempSwapSlot.GetComponent<slot>().DescriptionGame = pickedSlotIcon.GetComponent<slot>().DescriptionGame;
+		tempSwapSlot.GetComponent<slot>().DescriptionInventory = pickedSlotIcon.GetComponent<slot>().DescriptionInventory;
 		tempSwapSlot.GetComponent<slot>().useWith = pickedSlotIcon.GetComponent<slot>().useWith;
 		tempSwapSlot.GetComponent<slot>().soundType = pickedSlotIcon.GetComponent<slot>().soundType;
 		tempSwapSlot.GetComponent<slot>().slotEmpty = pickedSlotIcon.GetComponent<slot>().slotEmpty;
@@ -300,7 +299,8 @@ public class EventManager : MonoBehaviour {
 		else if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
 		pickedSlotIcon.name = tempNameString;
 		pickedSlotIcon.GetComponent<slot>().itemName = thisSlot.itemName;
-		pickedSlotIcon.GetComponent<slot>().itemDescription = thisSlot.itemDescription;
+		pickedSlotIcon.GetComponent<slot>().DescriptionGame = thisSlot.DescriptionGame;
+		pickedSlotIcon.GetComponent<slot>().DescriptionInventory = thisSlot.DescriptionInventory;
 		pickedSlotIcon.GetComponent<slot>().useWith = thisSlot.useWith;
 		pickedSlotIcon.GetComponent<slot>().soundType = thisSlot.soundType;
 		pickedSlotIcon.GetComponent<slot>().slotEmpty = thisSlot.slotEmpty;
@@ -324,7 +324,8 @@ public class EventManager : MonoBehaviour {
 		if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
 		thisSlot.name = tempNameString;
 		thisSlot.itemName = tempSwapSlot.GetComponent<slot>().itemName;
-		thisSlot.itemDescription = tempSwapSlot.GetComponent<slot>().itemDescription;
+		thisSlot.DescriptionGame = tempSwapSlot.GetComponent<slot>().DescriptionGame;
+		thisSlot.DescriptionInventory = tempSwapSlot.GetComponent<slot>().DescriptionInventory;
 		thisSlot.useWith = tempSwapSlot.GetComponent<slot>().useWith;
 		thisSlot.soundType = tempSwapSlot.GetComponent<slot>().soundType;
 		thisSlot.slotEmpty = tempSwapSlot.GetComponent<slot>().slotEmpty;
@@ -344,10 +345,11 @@ public class EventManager : MonoBehaviour {
 
 		/******************************************************
 		 *****************************************************/
-		tempSwapSlot.GetComponent<slot>().itemName = null;
-		tempSwapSlot.GetComponent<slot>().itemDescription = null;
-		tempSwapSlot.GetComponent<slot>().useWith = null;
-		tempSwapSlot.GetComponent<slot>().soundType = null;
+		tempSwapSlot.GetComponent<slot>().itemName = "";
+		tempSwapSlot.GetComponent<slot>().DescriptionGame = "";
+		tempSwapSlot.GetComponent<slot>().DescriptionInventory = "";
+		tempSwapSlot.GetComponent<slot>().useWith = "";
+		tempSwapSlot.GetComponent<slot>().soundType = "";
 		tempSwapSlot.GetComponent<slot>().slotEmpty = true;
 		
 		tempSwapSlot.GetComponent<slot>().spriteNorm = emptySlot.GetComponent<slot>().spriteNorm;

@@ -27,7 +27,8 @@ public class proxObj : EventManager {
 	private GameObject tempObject;
 	
 	public string itemName;
-	public string itemDescription;
+	public string DescriptionGame;
+	public string DescriptionInventory;
 	public string useWith;
 	public string soundType;
 
@@ -272,7 +273,15 @@ public class proxObj : EventManager {
 				if(tempNameString != "" && tempNameString[0] == '~') tempNameString = tempNameString.Substring(1);
 				thisOne.name = tempNameString;
 				thisOne.GetComponent<slot>().itemName = thisObject.GetComponent<proxObj>().itemName;
-				thisOne.GetComponent<slot>().itemDescription = thisObject.GetComponent<proxObj>().itemDescription;
+
+				if(thisObject.GetComponent<proxObj>().DescriptionInventory == "" || thisObject.GetComponent<proxObj>().DescriptionInventory == null) {
+					thisOne.GetComponent<slot>().DescriptionGame = thisObject.GetComponent<proxObj>().DescriptionGame;
+				}
+				else {
+					thisOne.GetComponent<slot>().DescriptionGame = thisObject.GetComponent<proxObj>().DescriptionInventory;
+				}
+
+				thisOne.GetComponent<slot>().DescriptionInventory = thisObject.GetComponent<proxObj>().DescriptionInventory;
 				thisOne.GetComponent<slot>().useWith = thisObject.GetComponent<proxObj>().useWith;
 				thisOne.GetComponent<slot>().soundType = thisObject.GetComponent<proxObj>().soundType;
 
@@ -326,7 +335,7 @@ public class proxObj : EventManager {
 				thisOne.name = "slot";
 				// change slot variables to emptySlot
 				thisOne.GetComponent<slot>().itemName = null;
-				thisOne.GetComponent<slot>().itemDescription = null;
+				thisOne.GetComponent<slot>().DescriptionGame = null;
 				thisOne.GetComponent<slot>().useWith = null;
 				thisOne.GetComponent<slot>().slotEmpty = true;
 
