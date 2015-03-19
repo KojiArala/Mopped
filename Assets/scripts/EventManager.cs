@@ -37,7 +37,7 @@ public class EventManager : MonoBehaviour {
 			camRot = rotTemp;
 		}
 	}
-	public List<cameraPosRot> cameras = new List<cameraPosRot>();
+
 	//protected static 
 		
 	// UI elements
@@ -85,7 +85,6 @@ public class EventManager : MonoBehaviour {
 		hoverTextBox = GameObject.Find ("hoverText");
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
-		addRoomCameras();
 		addInventoryItems();
 		getUIElements();
 
@@ -108,14 +107,6 @@ public class EventManager : MonoBehaviour {
 		slotPicked = false;
 		useItemWith = "";
 		iconMoving = false;
-
-		Camera.main.transform.position = cameras[currentRoom].camPos;
-		Camera.main.transform.rotation = Quaternion.Euler(cameras[currentRoom].camRot);
-		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
-
-		//CALL startMenu() in roomSwitcher script
-		//this.GetComponent<roomSwitcher>().startMenu();
-
 
 	} // END Awake
 	
@@ -400,13 +391,6 @@ public class EventManager : MonoBehaviour {
 //		*/
 //	} // END OnGUI
 
-	void addRoomCameras() {
-		// room 0, start menu screen?
-		cameras.Add (new cameraPosRot (new Vector3 (0, 0, 0), new Vector3 (0, 0, 0)));
-		// room 1+
-		cameras.Add (new cameraPosRot (new Vector3 (-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0)));
-	} // END addRoomCameras
-	
 	void addInventoryItems() {
 		//room 1 objects
 		inventoryOverlay.Add ("bucket", "Bucket object in your inventory now");

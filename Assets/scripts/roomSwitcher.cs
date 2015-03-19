@@ -2,56 +2,39 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class roomSwitcher : MonoBehaviour {
-	//enum rooms : int { room0=0, room1=1, room2=2, room3=3, room4=4 };
-	enum rooms { room0, room1, room2, room3, room4 };
+public class roomSwitcher : EventManager {
+//	enum rooms { room0, room1, room2, room3, room4 };
 	List<cameras> cameras = new List<cameras>();
 	//rooms previousRoom;
 
 	Dictionary<string, int> roomsData = new Dictionary<string, int>();
 
-	void Start () {
+	protected override void Start() {
+		// protected or public to use override (child), call base.Start() to cascade them
+		base.Start();
+
 		roomData ();
 		cameraData ();
-		//previousRoom = rooms.room0;
+		switchCamera(1); // start in room 1 until the menu screen is created
 	} // END Start
 
-	public void startMenu(){
-		Camera.main.transform.position = cameras[0].position;
-		Camera.main.transform.rotation = Quaternion.Euler(cameras[0].rotation);
-	} // END startMenu
-
 	void OnTriggerEnter(Collider thisObject) {
-		// get string of enum value
-		//rooms parsed_enum = (rooms)System.Enum.Parse(typeof(rooms), this.name, true);
-
-//		//Debug.Log("Welcome");
-//		Debug.Log("Hit " + this.name + " with object " + thisObject.gameObject.name);
-//		Debug.Log(cameras[1].position);
-//		Debug.Log(rooms.room1);
-//		Debug.Log("There are " + cameras.Count + " cameras");
-//		//Debug.Log (System.Enum.TryParse (this.name, out int test));
-
-//		foreach(KeyValuePair<string, int> pair in roomsData) {
-//			string thisOne = pair.Key + " = " + pair.Value;
-//			Debug.Log(thisOne);
-//		}
-
 		if(thisObject.name == "m2") {
 			int tempCode;
-			//if(roomsData.ContainsKey(this.name)) {
-			//if(roomsData.ContainsValue(300)) {
 			if(roomsData.TryGetValue(this.name, out tempCode)){
-				Camera.main.transform.position = cameras[tempCode].position;
-				Camera.main.transform.rotation = Quaternion.Euler(cameras[tempCode].rotation);
+				switchCamera(tempCode);
 			}
 			else {
 				Debug.Log("ERROR: room data for " + this.name + " not in Dictionary");
 			}
 		}
-		
-
 	} // END OnTriggerEnter
+
+	void switchCamera(int thisCam) {
+		Camera.main.transform.position = cameras[thisCam].position;
+		Camera.main.transform.rotation = Quaternion.Euler(cameras[thisCam].rotation);
+		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
+	}
 
 	void OnTriggerStay(Collider thisObject) {
 		//Debug.Log("STAY :)");
@@ -62,17 +45,21 @@ public class roomSwitcher : MonoBehaviour {
 	} // END OnTriggerExit
 
 	void roomData() {
-		roomsData.Add( "room0", 0);
-		roomsData.Add( "room1", 1);
-		roomsData.Add( "room2", 2);
-		roomsData.Add( "room3", 3);
+		// room data used to determine which camera data to pull
+		// first argument is name of collider second is the int or index of the camaraData List
+		roomsData.Add( "room0", 0);	// room 0 - menu screen?
+		roomsData.Add( "room1", 1);	// room 1
+		roomsData.Add( "room2", 2);	// room 2
+		roomsData.Add( "room3", 3);	// room 3
 
 	} // END roomData
 
 	void cameraData() {
-		cameras.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));
-		cameras.Add( new cameras(new Vector3(-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0) ));
-		cameras.Add( new cameras(new Vector3(50, 4, -1), new Vector3 (0, -40, 0) ));
+		// room camera data first Vector3 is position, second Vector3 is rotation
+		cameras.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));				// room 0 - menu screen?
+		cameras.Add( new cameras(new Vector3(-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0) ));	// room 1
+		cameras.Add( new cameras(new Vector3(50, 4, -1), new Vector3 (0, -40, 0) ));			// room 2
+		cameras.Add( new cameras(new Vector3(41, 0.25f, 18), new Vector3 (5, 287, 0) ));		// room 3
 
 	} // END cameraData
 
