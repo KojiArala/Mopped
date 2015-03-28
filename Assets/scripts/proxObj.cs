@@ -98,7 +98,6 @@ public class proxObj : EventManager {
 			                        thisObject.tag == "keypad" ||
 			                        thisObject.tag == "floor")
 			    				&& !EventSystem.current.IsPointerOverGameObject()) {
-
 				pickedObject[0] = thisObject.name;
 				pickedObject[1] = thisObject.tag;
 				pickedObject[2] = thisObject.transform.position; //.ToString("F4");
@@ -142,7 +141,7 @@ public class proxObj : EventManager {
 				} // END check if a keypad IF
 			}
 
-			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2") { //move M2 to clicked position
+			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2" && thisObject.name[0] != '+' && thisObject.name[0] != '-') { //move M2 to clicked position
 				//	get vector3 but only use x - z position
 				moveTo = new Vector3(hit.point.x, lastPosition.y, hit.point.z);
 				stationary = false;
