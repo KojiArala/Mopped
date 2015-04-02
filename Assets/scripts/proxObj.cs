@@ -87,6 +87,9 @@ public class proxObj : EventManager {
 				if(thisObject.name == useItemWith) {
 					base.useItem(true);
 				}
+				if(thisObject.GetComponent<proxObj>().itemName == "cleanup"){
+					base.cleanup(thisObject);
+				}
 				else {
 					dontUseItem(thisObject.name);
 				}
@@ -258,6 +261,7 @@ public class proxObj : EventManager {
 		objects.Add ("door_room1", "It is a door. It opens.\nSometimes it does not.\nThat is when I see it most.\n");
 		objects.Add ("door_keypad_room1", "Hey look...a keypad\non the wall\n\n");
 		objects.Add ("mop", "My mop. My greatest weapon in the war on filth. It must be retrieved; a stain exists in the next room.");
+		objects.Add ("Security Gun Placeholder", "Security Gun");
 		//room 2 objects
 
 	} // END addGameObjects

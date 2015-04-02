@@ -13,7 +13,7 @@ public class EventManager : MonoBehaviour {
 	protected bool stationary = true;
 	protected static Vector3 moveTo;
 	protected static Vector3 lastPosition;
-	private float moveSpeed = 1f;
+	private float moveSpeed = .75f;
 	private float turnSpeed = 1f;
 	//protected List<inventory> inventory = new List<inventory>();
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
@@ -248,6 +248,21 @@ public class EventManager : MonoBehaviour {
 		moveSlotBack();
 	} // END dontUseItem
 
+	protected void cleanup(GameObject useItem) {
+		string firstObj = pickedSlotIcon.GetComponent<slot>().useWith;
+		string firstName = pickedSlotIcon.GetComponent<slot>().itemName;
+		string secondObj = useItem.GetComponent<proxObj>().itemName;
+		string secondName = useItem.name;
+		if(firstObj == secondObj){
+			displayMessage(secondName + " has been sanitized.");
+			Destroy(useItem);
+		}
+		else {
+			displayMessage("Sorry, I can't use " + firstName + " with " + secondName);
+		}
+		moveSlotBack();
+	}
+
 	protected void moveSlotBack() {
 		// move "slot back to (slotX, slotY), Cancel mouse follow
 		pickedSlotIcon.transform.position = new Vector3(slotX, slotY, slotZ);
@@ -397,6 +412,7 @@ public class EventManager : MonoBehaviour {
 		inventoryOverlay.Add ("pencil", "Pencil...mmmmmm...graphite");
 		inventoryOverlay.Add ("notebook", "Notebook, ode to pulp");
 		inventoryOverlay.Add ("bottle", "Bottle, not just for babies anymore");
+		inventoryOverlay.Add ("Security Gun Placeholder", "Security Gun");
 		//room 2 objects
 	} // END addInventoryItems
 
@@ -413,14 +429,14 @@ public class EventManager : MonoBehaviour {
 		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Remove(0,1);
 		switch (useItemWith) {
-		case "notebook":
-			// clicked pencil on notebook
-			doNotebook();
-			break;
-		default:
-			Debug.Log("No option available in useInventoryItem for item " + useItemWith);
-			//print("Incorrect intelligence level.");
-			break;
+			case "notebook":
+				// clicked pencil on notebook
+				doNotebook();
+				break;
+			default:
+				Debug.Log("No option available in useInventoryItem for item " + useItemWith);
+				//print("Incorrect intelligence level.");
+				break;
 		}
 	} // END useInventoryItem
 
