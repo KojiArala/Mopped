@@ -6,6 +6,7 @@ public class roomSwitcher : EventManager {
 //	enum rooms { room0, room1, room2, room3, room4 };
 	List<cameras> cameras = new List<cameras>();
 	int currentRoom = -1;
+	bool switchPad = false;
 	//rooms previousRoom;
 
 	Dictionary<string, int> roomsData = new Dictionary<string, int>();
@@ -22,12 +23,14 @@ public class roomSwitcher : EventManager {
 	void OnTriggerEnter(Collider thisObject) {
 		if(thisObject.name == "m2") {
 			int tempCode;
-			if(roomsData.TryGetValue(this.name, out tempCode)){
-				if(tempCode == currentRoom && tempCode > 1) tempCode--;
+			string tempRoomName = this.name;
+			if(tempRoomName[0] == '~') switchPad = true;
+			if(roomsData.TryGetValue(tempRoomName, out tempCode)){
+				if(tempCode == currentRoom && switchPad) tempCode--;
 				switchCamera(tempCode);
 			}
 			else {
-				Debug.Log("ERROR: room data for " + this.name + " not in Dictionary");
+				Debug.Log("ERROR: room data for " + tempRoomName + " not in Dictionary");
 			}
 		}
 	} // END OnTriggerEnter
@@ -53,7 +56,7 @@ public class roomSwitcher : EventManager {
 		roomsData.Add( "room0", 0);			// room 0 - menu screen?
 		roomsData.Add( "room1", 1);			// room 1
 		roomsData.Add( "room2", 2);			// room 2
-		roomsData.Add( "room2_part2", 3);	// room 2 second half
+		roomsData.Add( "~room2_part2", 3);	// room 2 second half
 		roomsData.Add( "room3", 4);			// room 3
 
 	} // END roomData
