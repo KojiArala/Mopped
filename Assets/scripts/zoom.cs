@@ -53,8 +53,8 @@ public class zoom : EventManager {
 
 			if(thisObject.name[0] == '-') {
 				Debug.Log ("CLICKED: " + thisObject.name);
-				Debug.Log (previousCamPos);
-				Debug.Log (previousCamRot);
+				//Debug.Log (previousCamPos);
+				//Debug.Log (previousCamRot);
 				Camera.main.transform.position = previousCamPos;
 				Camera.main.transform.rotation = previousCamRot;
 				zoomedIn = false;
@@ -74,6 +74,8 @@ public class zoom : EventManager {
 	} // END Update
 
 	void switchCamera(int thisCam) {
+		stationary = true;
+		moveTo = m2.transform.position;
 		Camera.main.transform.position = zooms[thisCam].position;
 		Camera.main.transform.rotation = Quaternion.Euler(zooms[thisCam].rotation);
 		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
@@ -82,7 +84,7 @@ public class zoom : EventManager {
 	void zoomsData() {
 		// room data used to determine which camera data to pull
 		// first argument is name of collider second is the int or index of the camaraData List
-		zoomData.Add( "+closeupTest", 0);	// closeup 1
+		zoomData.Add( "+Airlock Door Panel Placeholder", 0);	// closeup 1
 		zoomData.Add( "test2", 1);	// closeup 2
 		zoomData.Add( "test3", 2);	// closeup 3
 
