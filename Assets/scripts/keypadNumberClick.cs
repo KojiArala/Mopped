@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class keypadNumberClick : EventManager {
 	public void clickThisNumber () {
-		if (this.name != "x") {
+		if (this.name != "clear") {
 			audioSource.clip = keypadSound;
 			audioSource.Play();
 
