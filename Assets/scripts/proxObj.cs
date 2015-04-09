@@ -40,12 +40,16 @@ public class proxObj : EventManager {
 	public Sprite spriteHigh2;
 	public Sprite overlayNorm2;
 	public Sprite overlayHigh2;
+	private GameObject lcdDisplay;
 
 	public int maxSize; // The max amount of times the item can stack
 
 	protected override void Start() {
 		// protected or public to use override (child), call base.Start() to cascade them
 		base.Start();
+		lcdDisplay = GameObject.Find("keypad_LCD");
+		Text thisString = lcdDisplay.GetComponentInChildren<Text>();
+		thisString.text = "";
 		thisPos = this.transform.position;
 		addGameObjects();
 		thisCode = -100;
@@ -170,6 +174,16 @@ public class proxObj : EventManager {
 
 		//check keypad code entry if keypad code is loaded
 		if (thisCode > 0) {
+			if(tappedCode != "-42") lcdDisplay.GetComponentInChildren<Text>().text = tappedCode;
+			if(tappedCode == "close") {
+				tempObject.transform.position = new Vector2 (-606, tempObject.transform.position.y);
+				keypadClosed = true;
+				thisCode = -100;
+				tappedCode = "-42";
+				currentDoor = null;
+				currentKeypad = null;
+				lcdDisplay.GetComponentInChildren<Text>().text = "";
+			}
 			if(thisCode == int.Parse(tappedCode)) {
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
@@ -184,6 +198,8 @@ public class proxObj : EventManager {
 				currentDoor = null;
 				currentKeypad.gameObject.tag = "Untagged";
 				currentKeypad = null;
+				lcdDisplay.GetComponentInChildren<Text>().text = "";
+
 				//Debug.Log("OPENED " + singleDoor.GetComponent<proxDoor>().doorName);
 			}
 		} // END keypad code IF
