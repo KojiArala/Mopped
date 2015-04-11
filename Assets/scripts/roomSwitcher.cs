@@ -18,6 +18,7 @@ public class roomSwitcher : EventManager {
 		roomData ();
 		cameraData ();
 		switchCamera(1); // start in room 1 until the menu screen is created
+
 	} // END Start
 
 	void OnTriggerEnter(Collider thisObject) {

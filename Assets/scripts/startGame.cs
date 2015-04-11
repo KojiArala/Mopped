@@ -15,8 +15,8 @@ public class startGame : EventManager {
 	} // END Start
 
 	public void startTheGame () {
+		gameStarted = true;
 		startOverlay.transform.position = new Vector2 (startOverlay.transform.position.x - 3000, startOverlay.transform.position.y);
 	}
-	
 
 }

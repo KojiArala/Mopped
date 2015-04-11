@@ -39,7 +39,8 @@ public class EventManager : MonoBehaviour {
 	}
 
 	//protected static 
-		
+	protected static bool gameStarted = false;
+
 	// UI elements
 	protected GameObject invBox;
 	protected GameObject invTab;
@@ -61,10 +62,14 @@ public class EventManager : MonoBehaviour {
 
 	// sounds
 	// variable to hold the audio source that plays
+	protected static AudioSource backgroundMusic;
 	protected static AudioSource audioSource;
 	protected static AudioSource m2MoveSound;
 	protected static AudioSource objAudioSource;
+	protected static AudioSource monsterBackground;
+	protected static AudioSource womanVoice;
 	// Sound files
+	protected static AudioClip backgroundClip;
 	protected static AudioClip keypadSound;
 	protected static AudioClip doorOpenSound;
 	protected static AudioClip doorCloseSound;
@@ -77,6 +82,9 @@ public class EventManager : MonoBehaviour {
 	protected static AudioClip objWet;
 	protected static AudioClip objMetalic;
 	protected static AudioClip objPlastic;
+	protected static AudioClip monsterSound;
+	//protected static AudioClip[] womanSounds;
+	protected static List<AudioClip> womanSounds = new List<AudioClip>();
 
 	void Awake() {
 		loadSounds();
@@ -116,6 +124,12 @@ public class EventManager : MonoBehaviour {
 	} // END Start
 
 	protected virtual void Update() {
+		if(gameStarted && !backgroundMusic.isPlaying) {
+			// can use slider in options overlay to control sound volume
+			//backgroundMusic.volume = 0.9f;
+			backgroundMusic.clip = backgroundClip;
+			backgroundMusic.Play();
+		}
 		m2Pos = m2.transform.position;
 		if (lastPosition != moveTo) {
 			m2.transform.Translate(new Vector3(0,0,0));
@@ -158,6 +172,7 @@ public class EventManager : MonoBehaviour {
 
 	void loadSounds() {
 		//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		backgroundClip = (AudioClip)Resources.Load ("Music/HulaBalu");
 		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
 		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
 		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
@@ -170,6 +185,11 @@ public class EventManager : MonoBehaviour {
 		objWet = (AudioClip)Resources.Load ("Sounds/WetPickup");
 		objMetalic = (AudioClip)Resources.Load ("Sounds/MetalPickup");
 		objPlastic = (AudioClip)Resources.Load ("Sounds/PlasticPickup");
+		monsterSound = (AudioClip)Resources.Load ("Sounds/Klaxon");
+	
+		backgroundMusic = (AudioSource)gameObject.AddComponent("AudioSource");
+		backgroundMusic.loop = true;
+		backgroundMusic.volume = 0.075f;
 
 		m2MoveSound = (AudioSource)gameObject.AddComponent("AudioSource");
 		m2MoveSound.loop = true;
@@ -182,6 +202,14 @@ public class EventManager : MonoBehaviour {
 		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
 		audioSource.loop = false;
 		audioSource.volume = 1.0f;
+
+		monsterBackground = (AudioSource)gameObject.AddComponent("AudioSource");
+		monsterBackground.loop = false;
+		monsterBackground.volume = 1.0f;
+
+		womanVoice = (AudioSource)gameObject.AddComponent("AudioSource");
+		womanVoice.loop = false;
+		womanVoice.volume = 1.0f;
 	}
 	
 	protected Vector3 getM2Pos(){

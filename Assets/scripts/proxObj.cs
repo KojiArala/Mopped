@@ -84,14 +84,13 @@ public class proxObj : EventManager {
 
 		if (Input.GetMouseButton (0)) {
 			hoverTextBox.transform.position = new Vector3 (0, -50, 0);
-
 			// left button clicked;
 			if(slotPicked && !EventSystem.current.IsPointerOverGameObject()) {
 				// something picked up so check if usable in world space
 				if(thisObject.name == useItemWith) {
 					base.useItem(true);
 				}
-				if(thisObject.GetComponent<proxObj>().itemName == "cleanup"){
+				else if(thisObject.GetComponent<proxObj>().itemName == "cleanup"){
 					base.cleanup(thisObject);
 				}
 				else {
