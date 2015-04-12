@@ -84,7 +84,7 @@ public class zoom : EventManager {
 	void zoomsData() {
 		// room data used to determine which camera data to pull
 		// first argument is name of collider second is the int or index of the camaraData List
-		zoomData.Add( "+Airlock Door Panel Placeholder", 0);	// closeup 1
+		zoomData.Add( "+Panel", 0);	// closeup 1
 		zoomData.Add( "test2", 1);	// closeup 2
 		zoomData.Add( "test3", 2);	// closeup 3
 
