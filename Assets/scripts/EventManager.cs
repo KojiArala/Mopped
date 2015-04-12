@@ -286,6 +286,7 @@ public class EventManager : MonoBehaviour {
 	} // END dontUseItem
 
 	protected void cleanup(GameObject useItem) {
+		float bodyPos = 0.0f;
 		string firstObj = pickedSlotIcon.GetComponent<slot>().useWith;
 		string firstName = pickedSlotIcon.GetComponent<slot>().itemName;
 		string secondObj = useItem.GetComponent<proxObj>().itemName;
@@ -294,7 +295,8 @@ public class EventManager : MonoBehaviour {
 		string bodySwitch = useItem.GetComponent<proxObj>().useWith;
 		// for lab coat switch cleanup fill in description inventory variable with the Y position of the final model
 		// model to be sqapped in is below the floor so this pulls it back into place once old model is destroyed
-		float bodyPos = float.Parse(useItem.GetComponent<proxObj>().DescriptionInventory);
+		string tempJunk = useItem.GetComponent<proxObj>().DescriptionInventory;
+		if(tempJunk != "") bodyPos = float.Parse(tempJunk);
 		if(firstObj == secondObj){
 			displayMessage(secondObj + " has been sanitized.");
 			Destroy(useItem);
@@ -470,7 +472,7 @@ public class EventManager : MonoBehaviour {
 	} // END getUIElements
 
 	void useInventoryItem() {
-		Debug.Log (useItemWith);
+		//Debug.Log (useItemWith);
 		// useItemWith is name of picked object so switch/case statement to handle what to do
 		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Substring(1);
 //		if(useItemWith != "" && useItemWith[0] == '~') useItemWith = useItemWith.Remove(0,1);
