@@ -174,6 +174,7 @@ public class proxObj : EventManager {
 		//check keypad code entry if keypad code is loaded
 		if (thisCode > 0) {
 			if(tappedCode != "-42") lcdDisplay.GetComponentInChildren<Text>().text = tappedCode;
+			else lcdDisplay.GetComponentInChildren<Text>().text = "";
 			if(tappedCode == "close") {
 				tempObject.transform.position = new Vector2 (-606, tempObject.transform.position.y);
 				keypadClosed = true;
@@ -183,12 +184,22 @@ public class proxObj : EventManager {
 				currentKeypad = null;
 				lcdDisplay.GetComponentInChildren<Text>().text = "";
 			}
+			if(tappedCode.Length >= 4 && thisCode != int.Parse(tappedCode)){
+				lcdDisplay.GetComponentInChildren<Text>().text = "";
+				base.displayMessage ("Incorrect Code: try again");
+				tappedCode = "-42";
+				keypadSource.clip = keypadIncorrect;
+				keypadSource.Play();
+			}
 			if(thisCode == int.Parse(tappedCode)) {
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
 				singleDoor.GetComponent<proxDoor>().unlockDoor(doorAction);
 				string thisDoorName = singleDoor.GetComponent<proxDoor>().doorName;
 				base.displayMessage ("Opening " + thisDoorName);
+				// not working
+				//keypadSource.clip = keypadCorrect;
+				//keypadSource.Play();
 
 				tempObject.transform.position = new Vector2 (-606, tempObject.transform.position.y);
 				keypadClosed = true;

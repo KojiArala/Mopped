@@ -5,10 +5,9 @@ using UnityEngine.EventSystems;
 
 public class keypadNumberClick : EventManager {
 	public void clickThisNumber () {
+		keypadSource.clip = keypadSound;
+		keypadSource.Play();
 		if (this.name != "clear" && this.name != "close") {
-			audioSource.clip = keypadSound;
-			audioSource.Play();
-
 			if(tappedCode != "-42") tappedCode += this.name;
 			else tappedCode = this.name;
 		}
@@ -16,6 +15,7 @@ public class keypadNumberClick : EventManager {
 			tappedCode = "close";
 		}
 		else {
+			// clear
 			tappedCode = "-42";
 		}
 	}

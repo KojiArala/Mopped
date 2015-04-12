@@ -28,15 +28,15 @@ public class EventManager : MonoBehaviour {
 
 	// camera positions and rotations
 	public static int currentRoom = 1;
-	public struct cameraPosRot {
-		public Vector3 camPos;
-		public Vector3 camRot;
-		
-		public cameraPosRot(Vector3 posTemp, Vector3 rotTemp) {
-			camPos = posTemp;
-			camRot = rotTemp;
-		}
-	}
+//	public struct cameraPosRot {
+//		public Vector3 camPos;
+//		public Vector3 camRot;
+//		
+//		public cameraPosRot(Vector3 posTemp, Vector3 rotTemp) {
+//			camPos = posTemp;
+//			camRot = rotTemp;
+//		}
+//	}
 
 	//protected static 
 	protected static bool gameStarted = false;
@@ -63,6 +63,7 @@ public class EventManager : MonoBehaviour {
 	// sounds
 	// variable to hold the audio source that plays
 	protected static AudioSource backgroundMusic;
+	protected static AudioSource keypadSource;
 	protected static AudioSource audioSource;
 	protected static AudioSource m2MoveSound;
 	protected static AudioSource objAudioSource;
@@ -71,6 +72,8 @@ public class EventManager : MonoBehaviour {
 	// Sound files
 	protected static AudioClip backgroundClip;
 	protected static AudioClip keypadSound;
+	protected static AudioClip keypadCorrect;
+	protected static AudioClip keypadIncorrect;
 	protected static AudioClip doorOpenSound;
 	protected static AudioClip doorCloseSound;
 	protected static AudioClip lockerOpen;
@@ -174,6 +177,8 @@ public class EventManager : MonoBehaviour {
 		//		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
 		backgroundClip = (AudioClip)Resources.Load ("Music/HulaBalu");
 		keypadSound = (AudioClip)Resources.Load ("Sounds/Click");
+		keypadCorrect = (AudioClip)Resources.Load ("Sounds/CorrectCode");
+		keypadIncorrect = (AudioClip)Resources.Load ("Sounds/Fail");
 		doorOpenSound = (AudioClip)Resources.Load ("Sounds/DoorOpens");
 		doorCloseSound = (AudioClip)Resources.Load ("Sounds/DoorCloses");
 		lockerOpen = (AudioClip)Resources.Load ("Sounds/LockerOpen");
@@ -203,6 +208,10 @@ public class EventManager : MonoBehaviour {
 		audioSource.loop = false;
 		audioSource.volume = 1.0f;
 
+		keypadSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keypadSource.loop = false;
+		keypadSource.volume = 1.0f;
+		
 		monsterBackground = (AudioSource)gameObject.AddComponent("AudioSource");
 		monsterBackground.loop = false;
 		monsterBackground.volume = 1.0f;
