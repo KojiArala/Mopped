@@ -52,9 +52,6 @@ public class zoom : EventManager {
 			} // END +
 
 			if(thisObject.name[0] == '-') {
-				Debug.Log ("CLICKED: " + thisObject.name);
-				//Debug.Log (previousCamPos);
-				//Debug.Log (previousCamRot);
 				Camera.main.transform.position = previousCamPos;
 				Camera.main.transform.rotation = previousCamRot;
 				zoomedIn = false;
@@ -84,8 +81,8 @@ public class zoom : EventManager {
 	void zoomsData() {
 		// room data used to determine which camera data to pull
 		// first argument is name of collider second is the int or index of the camaraData List
-		zoomData.Add( "+Panel", 0);	// closeup 1
-		zoomData.Add( "test2", 1);	// closeup 2
+		zoomData.Add( "+Panel1", 0);	// closeup 1
+		zoomData.Add( "+Panel2", 1);	// closeup 2
 		zoomData.Add( "test3", 2);	// closeup 3
 
 	} // END roomData
@@ -93,7 +90,7 @@ public class zoom : EventManager {
 	void zoomCameras() {
 		// room camera data first Vector3 is position, second Vector3 is rotation
 		zooms.Add( new cameras(new Vector3(-63.6f, 0, 40), new Vector3 (0, 0, 0) ));		// closeup 1
-		zooms.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));				// closeup 2
+		zooms.Add( new cameras(new Vector3(-63.6f, 0, 40), new Vector3 (0, 0, 0) ));		// closeup 2
 		zooms.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));				// closeup 3
 
 	} // END cameraData

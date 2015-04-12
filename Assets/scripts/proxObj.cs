@@ -148,6 +148,7 @@ public class proxObj : EventManager {
 			}
 
 			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2" && thisObject.name[0] != '+' && thisObject.name[0] != '-') { //move M2 to clicked position
+				//Debug.Log (thisObject.name[0] + " ~ " + thisObject.name);
 				//	get vector3 but only use x - z position
 				moveTo = new Vector3(hit.point.x, lastPosition.y, hit.point.z);
 				stationary = false;

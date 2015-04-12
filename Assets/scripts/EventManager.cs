@@ -290,9 +290,18 @@ public class EventManager : MonoBehaviour {
 		string firstName = pickedSlotIcon.GetComponent<slot>().itemName;
 		string secondObj = useItem.GetComponent<proxObj>().itemName;
 		string secondName = useItem.name;
+		// for lab coat switch cleanup fill in usewith variable with the object name to use
+		string bodySwitch = useItem.GetComponent<proxObj>().useWith;
+		// for lab coat switch cleanup fill in description inventory variable with the Y position of the final model
+		// model to be sqapped in is below the floor so this pulls it back into place once old model is destroyed
+		float bodyPos = float.Parse(useItem.GetComponent<proxObj>().DescriptionInventory);
 		if(firstObj == secondObj){
-			displayMessage(secondName + " has been sanitized.");
+			displayMessage(secondObj + " has been sanitized.");
 			Destroy(useItem);
+			if(bodySwitch != "") {
+				GameObject bodyMove = GameObject.Find(bodySwitch);
+				bodyMove.transform.position = new Vector3(bodyMove.transform.position.x, bodyPos, bodyMove.transform.position.z);
+			}
 		}
 		else {
 			displayMessage("Sorry, I can't use " + firstName + " with " + secondName);
