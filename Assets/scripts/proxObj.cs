@@ -112,7 +112,7 @@ public class proxObj : EventManager {
 					//Debug.Log (thisObject.name);
 					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
 						tempObject = GameObject.Find (nameTemp);
-						tempObject.transform.position = new Vector2 (tempObject.transform.position.x + base.offset, base.guiBottom);
+						tempObject.transform.position = new Vector2 ((Screen.width/2), base.guiBottom);
 						keypadClosed = false;
 						if(keypadCodes.TryGetValue(thisObject.name, out tempCode)){
 							thisCode = tempCode;

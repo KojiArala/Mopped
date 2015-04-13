@@ -10,14 +10,14 @@ public class hideOverlay : EventManager {
 			tempObjName = tempObjName.Substring(1);
 		}
 
-		if(!slotPicked) this.transform.position = new Vector2 (this.transform.position.x - base.offset, this.transform.position.y);
+		if(!slotPicked) this.transform.position = new Vector2 ((Screen.width/2), this.transform.position.y);
 		if(tempObjName == useItemWith) {
 			base.useItem(true);
 		}
 	}
 
 	public void showMe() {
-		this.transform.position = new Vector2 (this.transform.position.x + base.offset, this.transform.position.y);
+		this.transform.position = new Vector2 ((Screen.width/2), this.transform.position.y);
 	}
 
 //	void OnMouseDown() {
