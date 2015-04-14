@@ -10,8 +10,10 @@ public class voiceMonsterBackground : EventManager {
 
 	IEnumerator randomRepeat() {
 		yield return new WaitForSeconds(Random.Range(5, 25));
-		monsterBackground.clip = monsterSound;
-		monsterBackground.Play();
+		if(gameStarted) {
+			monsterBackground.clip = monsterSound;
+			monsterBackground.Play();
+		}
 		StartCoroutine(randomRepeat());
 	}
 	

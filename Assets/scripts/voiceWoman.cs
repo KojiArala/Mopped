@@ -20,7 +20,6 @@ public class voiceWoman : EventManager {
 
 			womanVoice.clip = womanSounds[useThis];
 			womanVoice.Play();
-
 		}
 		StartCoroutine(womanRepeat());
 	}

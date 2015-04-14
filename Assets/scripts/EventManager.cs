@@ -53,6 +53,10 @@ public class EventManager : MonoBehaviour {
 	protected static bool slotPicked;
 	protected static string useItemWith;
 	protected static bool iconMoving;
+	protected static GameObject soundVolume;
+	protected static GameObject musicVolume;
+	protected static Slider soundSlider;
+	protected static Slider musicSlider;
 
 	// keypad code setup
 	public static int thisCode;
@@ -93,7 +97,11 @@ public class EventManager : MonoBehaviour {
 		loadSounds();
 		m2 = GameObject.Find("m2");
 		messageBox = GameObject.Find("message");
-		hoverTextBox = GameObject.Find ("hoverText");
+		hoverTextBox = GameObject.Find("hoverText");
+		soundVolume = GameObject.Find("sound_slider");
+		soundSlider = soundVolume.GetComponent<Slider>();
+		musicVolume = GameObject.Find("music_slider");
+		musicSlider = musicVolume.GetComponent<Slider>();
 		lastPosition = moveTo = m2.transform.position;
 		stationary = true;
 		addInventoryItems();
@@ -118,6 +126,9 @@ public class EventManager : MonoBehaviour {
 		slotPicked = false;
 		useItemWith = "";
 		iconMoving = false;
+
+		soundSlider.value = audioSource.volume;
+		musicSlider.value = backgroundMusic.volume;
 
 	} // END Awake
 	
