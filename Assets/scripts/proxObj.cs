@@ -289,6 +289,8 @@ public class proxObj : EventManager {
 		objects.Add ("door_keypad_room1", "Hey look...a keypad\non the wall\n\n");
 		objects.Add ("mop", "My mop. My greatest weapon in the war on filth. It must be retrieved; a stain exists in the next room.");
 		objects.Add ("Security Gun", "Security Gun");
+		objects.Add ("LabCorpseCoat", "Hmmm, such a messy coat");
+		objects.Add ("Pool of blood", "Red stain on floor");
 		//room 2 objects
 
 	} // END addGameObjects
