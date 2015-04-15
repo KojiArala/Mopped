@@ -25,6 +25,7 @@ public class proxObj : EventManager {
 	private Button[] buttons;
 	private GameObject thisObject;
 	private GameObject tempObject;
+	private bool allowDoorOpen = true;
 	
 	public string itemName;
 	public string DescriptionGame;
@@ -112,8 +113,7 @@ public class proxObj : EventManager {
 					//Debug.Log (thisObject.name);
 					if(keypads.TryGetValue(thisObject.name, out nameTemp)){
 						tempObject = GameObject.Find (nameTemp);
-						tempObject.transform.position = new Vector2 ((Screen.width/2), base.guiBottom);
-						keypadClosed = false;
+						allowDoorOpen = true;
 						if(keypadCodes.TryGetValue(thisObject.name, out tempCode)){
 							thisCode = tempCode;
 						}
@@ -139,6 +139,25 @@ public class proxObj : EventManager {
 							thisCode = -100;
 						}
 
+						if(thisCode == 9432){
+							if(inventoryCheck.Contains("Mop")
+							   && inventoryCheck.Contains("Spray Bottle")
+							   && inventoryCheck.Contains("Bucket")) {
+							}
+							else {
+								allowDoorOpen = false;
+							}
+
+						}
+						
+						if(allowDoorOpen) {
+							tempObject.transform.position = new Vector2 ((Screen.width/2), base.guiBottom);
+							keypadClosed = false;
+						}
+						else {
+							base.displayMessage ("Can't leave without all three cleaning products");
+						}
+
 					}
 					else {
 						Debug.Log ("ERROR: proxObj keypad does not exist in dictionary");
@@ -147,7 +166,11 @@ public class proxObj : EventManager {
 				} // END check if a keypad IF
 			}
 
-			if(!EventSystem.current.IsPointerOverGameObject() && thisObject.tag != "room_structure" && thisObject.name != "m2" && thisObject.name[0] != '+' && thisObject.name[0] != '-') { //move M2 to clicked position
+			if(!EventSystem.current.IsPointerOverGameObject()
+			   		&& thisObject.tag != "room_structure"
+			   		&& thisObject.name != "m2"
+			   		&& thisObject.name[0] != '+'
+			   		&& thisObject.name[0] != '-') { //move M2 to clicked position
 				//Debug.Log (thisObject.name[0] + " ~ " + thisObject.name);
 				//	get vector3 but only use x - z position
 				moveTo = new Vector3(hit.point.x, lastPosition.y, hit.point.z);
@@ -332,6 +355,8 @@ public class proxObj : EventManager {
 				st.pressedSprite = thisObject.GetComponent<proxObj>().spriteNorm;
 				thisOne.spriteState = st;
 				slotFound = true;
+
+				inventoryCheck.Add (thisObject.GetComponent<proxObj>().itemName);
 
 				// once slot has been set remove the selected object from game
 				Destroy (thisObject);

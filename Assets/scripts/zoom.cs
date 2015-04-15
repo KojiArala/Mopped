@@ -35,7 +35,7 @@ public class zoom : EventManager {
 		
 		if (Input.GetMouseButton (0)) {
 			if(thisObject.name[0] == '+') {
-				Debug.Log ("CLICKED: " + thisObject.name);
+				//Debug.Log ("CLICKED: " + thisObject.name);
 				
 				int tempCode;
 				if(zoomData.TryGetValue(thisObject.name, out tempCode)){
@@ -47,7 +47,7 @@ public class zoom : EventManager {
 					switchCamera(tempCode);
 				}
 				else {
-					Debug.Log("ERROR: FOO data for " + thisObject.name + " not in Dictionary");
+					Debug.Log("ERROR: Data for " + thisObject.name + " not in Dictionary");
 				}
 			} // END +
 

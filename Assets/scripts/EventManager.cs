@@ -15,7 +15,18 @@ public class EventManager : MonoBehaviour {
 	protected static Vector3 lastPosition;
 	private float moveSpeed = .75f;
 	private float turnSpeed = 1f;
-	//protected List<inventory> inventory = new List<inventory>();
+	protected static List<string> inventoryCheck = new List<string>();
+	//inventoryCheck.Clear();
+	//inventoryCheck.Contains("NAME");
+	//inventoryCheck.Remove("NAME");
+	//inventoryCheck.Sort();
+	//inventoryCheck.Insert(1, "NAME");
+//	for (int i = 0; i < inventoryCheck.Count; i++) {
+//		inventoryCheck[i];
+//	}
+	//string[] arr = inventoryCheck.ToArray();
+	//string combindedString = string.Join(",", inventoryCheck);
+
 	protected Dictionary<string, string> inventoryOverlay = new Dictionary<string, string>();
 	//protected Dictionary<string, GameObject> inventoryOverlay = new Dictionary<string, GameObject>();
 	protected int offset = 1000;
