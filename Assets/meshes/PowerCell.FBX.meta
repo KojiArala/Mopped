@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 92c1d7a1a8e7c764881097329e7e8889
+guid: 5bd9b19a809fc3c468dff816d472baed
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -7,7 +7,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: pCylinder6
+    4300000: Power Cell
     9500000: //RootNode
   materials:
     importMaterials: 1
