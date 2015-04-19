@@ -68,6 +68,7 @@ public class EventManager : MonoBehaviour {
 	protected static GameObject musicVolume;
 	protected static Slider soundSlider;
 	protected static Slider musicSlider;
+	protected static bool canSwitch = false;
 
 	// keypad code setup
 	public static int thisCode;
@@ -103,6 +104,10 @@ public class EventManager : MonoBehaviour {
 	protected static AudioClip monsterSound;
 	//protected static AudioClip[] womanSounds;
 	protected static List<AudioClip> womanSounds = new List<AudioClip>();
+	// VOICES
+	protected static AudioClip voiceBucket;
+	protected static AudioClip cantLeave;
+	protected static AudioClip voiceMop;
 
 	void Awake() {
 		loadSounds();
@@ -213,6 +218,12 @@ public class EventManager : MonoBehaviour {
 		objMetalic = (AudioClip)Resources.Load ("Sounds/MetalPickup");
 		objPlastic = (AudioClip)Resources.Load ("Sounds/PlasticPickup");
 		monsterSound = (AudioClip)Resources.Load ("Sounds/Klaxon");
+
+		//VOICES
+		cantLeave = (AudioClip)Resources.Load ("Voices/CantLeave");
+		voiceBucket = (AudioClip)Resources.Load ("Voices/BucketDesc");
+		voiceMop = (AudioClip)Resources.Load ("Voices/MopInvDesc");
+
 	
 		backgroundMusic = (AudioSource)gameObject.AddComponent("AudioSource");
 		backgroundMusic.loop = true;

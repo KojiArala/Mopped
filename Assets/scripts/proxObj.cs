@@ -10,6 +10,7 @@ public class proxObj : EventManager {
 	private float delta;
 	private Vector3 thisPos;
 	private Dictionary<string, string> objects = new Dictionary<string, string>();
+	private Dictionary<string, AudioClip> voices = new Dictionary<string, AudioClip>();
 	private Dictionary<string, int> keypadCodes = new Dictionary<string, int>();
 	private Dictionary<string, string> keypads = new Dictionary<string, string>();
 	private Dictionary<string, string> doors = new Dictionary<string, string>();
@@ -156,6 +157,8 @@ public class proxObj : EventManager {
 						}
 						else {
 							base.displayMessage ("Can't leave without all three cleaning products");
+							audioSource.clip = cantLeave;
+							audioSource.Play();
 						}
 
 					}
@@ -169,6 +172,7 @@ public class proxObj : EventManager {
 			if(!EventSystem.current.IsPointerOverGameObject()
 			   		&& thisObject.tag != "room_structure"
 			   		&& thisObject.name != "m2"
+					&& thisObject.tag != "zoom_view_obj"
 			   		&& thisObject.name[0] != '+'
 			   		&& thisObject.name[0] != '-') { //move M2 to clicked position
 				//Debug.Log (thisObject.name[0] + " ~ " + thisObject.name);
@@ -183,6 +187,11 @@ public class proxObj : EventManager {
 			if(!EventSystem.current.IsPointerOverGameObject()) {
 				if(objects.TryGetValue(thisObject.name, out temp)){
 					base.displayMessage (temp);
+					AudioClip tempAudio;
+					if(voices.TryGetValue(thisObject.name, out tempAudio)) {
+						objAudioSource.clip = tempAudio;
+						objAudioSource.Play();
+					}
 				}
 				else {
 					base.displayMessage ("");
@@ -216,6 +225,8 @@ public class proxObj : EventManager {
 				keypadSource.Play();
 			}
 			if(thisCode == int.Parse(tappedCode)) {
+				// prevent camswitch until main door is open
+				if(thisCode == 9432) canSwitch = true;
 				GameObject singleDoor;
 				singleDoor = GameObject.Find(currentDoor);
 				singleDoor.GetComponent<proxDoor>().unlockDoor(doorAction);
@@ -315,6 +326,9 @@ public class proxObj : EventManager {
 		objects.Add ("LabCorpseCoat", "Hmmm, such a messy coat");
 		objects.Add ("Pool of blood", "Red stain on floor");
 		//room 2 objects
+
+		voices.Add ("bucket", voiceBucket);
+		voices.Add ("mop", voiceMop);
 
 	} // END addGameObjects
 

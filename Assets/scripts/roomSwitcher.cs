@@ -33,7 +33,16 @@ public class roomSwitcher : EventManager {
 
 	} // END Start
 
-	void OnTriggerEnter(Collider thisObject) {
+	void OnTriggerEnter(Collider thisTemp) {
+		overPad(thisTemp);
+	} // END OnTriggerEnter
+
+	void OnTriggerStay(Collider thisTemp) {
+		//M2 won't "pop" into place for some reason
+		//overPad(thisTemp);
+	} // END OnTriggerStay
+
+	void overPad(Collider thisObject){
 		if(thisObject.name == "m2") {
 			int tempCode;
 			string tempRoomName = this.name;
@@ -46,26 +55,25 @@ public class roomSwitcher : EventManager {
 				Debug.Log("ERROR: room data for " + tempRoomName + " not in Dictionary");
 			}
 		}
-	} // END OnTriggerEnter
+	} // END overPad
 
 	void switchCamera(int thisCam) {
-		currentRoom = thisCam;
-		Camera.main.transform.position = cameras[thisCam].position;
-		Camera.main.transform.rotation = Quaternion.Euler(cameras[thisCam].rotation);
-		//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
-		// move M2 into new room start position
-		//stationary = true;
-		moveTo = m2Data [thisCam].pos;
-		m2.transform.position = m2Data[thisCam].pos;
-		m2.transform.rotation = Quaternion.Euler(m2Data[thisCam].rot);
-		// add in 1 to 3 unit forward movement
-		//m2.transform.localPosition += Vector3.forward;
-		//moveTo = Vector3.forward;
+		//Debug.Log (thisCam);
+		if(canSwitch) {
+			currentRoom = thisCam;
+			Camera.main.transform.position = cameras[thisCam].position;
+			Camera.main.transform.rotation = Quaternion.Euler(cameras[thisCam].rotation);
+			//Camera.main.fieldOfView -= 1; //decrease field of view (zoom)
+			// move M2 into new room start position
+			//stationary = true;
+			moveTo = m2Data [thisCam].pos;
+			m2.transform.position = m2Data[thisCam].pos;
+			m2.transform.rotation = Quaternion.Euler(m2Data[thisCam].rot);
+			// add in 1 to 3 unit forward movement
+			//m2.transform.localPosition += Vector3.forward;
+			//moveTo = Vector3.forward;
+		}
 	}
-
-	void OnTriggerStay(Collider thisObject) {
-		//Debug.Log("STAY :)");
-	} // END OnTriggerStay
 
 	void OnTriggerExit(Collider thisObject) {
 		//Debug.Log("bye-bye birdie");
@@ -86,7 +94,7 @@ public class roomSwitcher : EventManager {
 		// room camera data first Vector3 is position, second Vector3 is rotation
 		cameras.Add( new cameras(new Vector3(0, 0, 0), new Vector3 (0, 0, 0) ));							// room 0 - menu screen, placeholder only
 		cameras.Add( new cameras(new Vector3(-1.25f, 3.7f, -6.5f), new Vector3 (17, 35, 0) ));				// room 1
-		cameras.Add( new cameras(new Vector3(33.82f, 9.89f, 23.53f), new Vector3 (26.4f, 78.9f, 357.4f) ));	// room 2
+		cameras.Add (new cameras(new Vector3 (25.35f, 9.89f, 23.55f), new Vector3 (24.8f, 83.7f, 1.33f)));	// room 2
 		cameras.Add( new cameras(new Vector3(57.41f, 8.3f, 68.39f), new Vector3 (24, 328.64f, 358.25f) ));	// room 2 second half
 		cameras.Add( new cameras(new Vector3(41, 0.25f, 18), new Vector3 (5, 287, 0) ));					// room 3
 
