@@ -225,31 +225,31 @@ public class EventManager : MonoBehaviour {
 		voiceMop = (AudioClip)Resources.Load ("Voices/MopInvDesc");
 
 	
-		backgroundMusic = (AudioSource)gameObject.AddComponent("AudioSource");
+		backgroundMusic = (AudioSource)gameObject.AddComponent<AudioSource>();
 		backgroundMusic.loop = true;
 		backgroundMusic.volume = 0.075f;
 
-		m2MoveSound = (AudioSource)gameObject.AddComponent("AudioSource");
+		m2MoveSound = (AudioSource)gameObject.AddComponent<AudioSource>();
 		m2MoveSound.loop = true;
 		m2MoveSound.volume = 1.0f;
 
-		objAudioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		objAudioSource = (AudioSource)gameObject.AddComponent<AudioSource>();
 		objAudioSource.loop = false;
 		objAudioSource.volume = 1.0f;
 
-		audioSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		audioSource = (AudioSource)gameObject.AddComponent<AudioSource>();
 		audioSource.loop = false;
 		audioSource.volume = 1.0f;
 
-		keypadSource = (AudioSource)gameObject.AddComponent("AudioSource");
+		keypadSource = (AudioSource)gameObject.AddComponent<AudioSource>();
 		keypadSource.loop = false;
 		keypadSource.volume = 1.0f;
 		
-		monsterBackground = (AudioSource)gameObject.AddComponent("AudioSource");
+		monsterBackground = (AudioSource)gameObject.AddComponent<AudioSource>();
 		monsterBackground.loop = false;
 		monsterBackground.volume = 1.0f;
 
-		womanVoice = (AudioSource)gameObject.AddComponent("AudioSource");
+		womanVoice = (AudioSource)gameObject.AddComponent<AudioSource>();
 		womanVoice.loop = false;
 		womanVoice.volume = 1.0f;
 	}
